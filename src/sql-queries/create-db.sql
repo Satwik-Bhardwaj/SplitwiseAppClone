@@ -18,16 +18,9 @@ CREATE TABLE `User` (
 -- Group Table
 CREATE TABLE `Group` (
     `group_id` INTEGER AUTO_INCREMENT PRIMARY KEY,
-    `group_name` VARCHAR(255) NOT NULL
-);
-
--- User_Group Table (Many-to-Many Relationship)
-CREATE TABLE `User_Group` (
+    `group_name` VARCHAR(255) NOT NULL,
     `user_id` INTEGER,
-    `group_id` INTEGER DEFAULT 0,
-    PRIMARY KEY (`user_id`, `group_id`),
-    FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE,
-    FOREIGN KEY (`group_id`) REFERENCES `Group`(`group_id`)
+    FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`) ON DELETE CASCADE
 );
 
 -- Expense Table

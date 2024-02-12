@@ -8,11 +8,18 @@ import lombok.Data;
 @Table(name = "Expense_Share")
 public class ExpenseShare {
 
-    @Id
-    @Column(name = "sharing_expense_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @EmbeddedId
+    private SharingExpenseId id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("expenseId")
+    private Expense expense;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    private User user;
+
+    @Column(name = "shared_amount")
+    private double sharedAmount;
 
 }

@@ -38,9 +38,11 @@ public class User {
     @JoinColumn(name = "expense_id")
     private List<Expense> expenseList;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
-    @JoinTable(name = "User_Group", joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private Set<Group> groupSet;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private List<Group> groupList;
+
+    @OneToMany(mappedBy = "User", cascade = CascadeType.ALL)
+    private List<ExpenseShare> userInvolvedInExpenses;
 
 }

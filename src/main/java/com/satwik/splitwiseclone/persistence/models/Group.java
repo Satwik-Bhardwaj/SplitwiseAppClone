@@ -16,6 +16,8 @@ public class Group {
     @Column(name = "group_name")
     private String groupName;
 
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

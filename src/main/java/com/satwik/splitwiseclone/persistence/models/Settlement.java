@@ -3,24 +3,23 @@ package com.satwik.splitwiseclone.persistence.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
-@Table(name = "Expense")
-public class Expense {
+@Table(name = "Settlement")
+public class Settlement {
 
     @Id
-    @Column(name = "expense_id")
+    @Column(name = "settlement_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "group_id")
-    private int groupId;
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payer_id")
-    private User user;
+    private int payerId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payee_id")
+    private int payeeId;
 
     @Column(name = "amount")
     private double amount;
@@ -32,9 +31,6 @@ public class Expense {
     private String date;
 
     @Column(name = "created_at")
-    private String expenseCreatedAt;
-
-    @OneToMany(mappedBy = "Expense", cascade = CascadeType.ALL)
-    private List<ExpenseShare> expenseShareList;
+    private String createAt;
 
 }
