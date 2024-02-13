@@ -15,8 +15,9 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "group_id")
-    private int groupId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
+    private Group group;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payer_id")

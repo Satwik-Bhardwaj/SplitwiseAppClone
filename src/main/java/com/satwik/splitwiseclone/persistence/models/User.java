@@ -31,6 +31,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    // not filling this value using jpa, but default value is current timestamp in SQL. Exception can occur here
     @Column(name = "created_at")
     private String userCreatedAt;
 

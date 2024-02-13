@@ -1,0 +1,80 @@
+package com.satwik.splitwiseclone.service.implementations;
+
+import com.satwik.splitwiseclone.persistence.dto.PhoneDTO;
+import com.satwik.splitwiseclone.persistence.dto.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.dto.UserDTO;
+import com.satwik.splitwiseclone.persistence.models.Group;
+import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.repository.GroupRepository;
+import com.satwik.splitwiseclone.repository.UserRepository;
+import com.satwik.splitwiseclone.service.interfaces.UserService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
+
+    // for save and update
+    @Override
+    @Transactional
+    public String saveUser(RegisterUserRequest request) {
+
+        User user = new User();
+
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setCountryCode(request.getPhoneDTO().getCountryCode());
+        user.setPhoneNumber(request.getPhoneDTO().getPhoneNumber());
+
+        // TODO : encrypt the password after adding the security
+        user.setPassword(request.getPassword());
+
+        // creating the non group expenses group
+        Group group = new Group();
+        group.setGroupName("Non Grouped Expenses");
+        group.setUser(user);
+
+        // save the group
+        groupRepository.save(group);
+
+        return user.getUsername();
+    }
+
+    @Override
+    public UserDTO findUserById(int userId) {
+
+        User user = null;
+        if(userRepository.findById(userId).isPresent())
+            user = userRepository.findById(userId).get();
+
+        // TODO : if user==null return exception :: create new exception
+
+        UserDTO userResult = new UserDTO(
+                user.getUsername(),
+                user.getEmail(),
+                new PhoneDTO(user.getCountryCode(), user.getPhoneNumber()),
+                user.getUserCreatedAt()
+        );
+
+        return userResult;
+    }
+
+
+    @Override
+    public String deleteUser(int userId) {
+        userRepository.deleteById(userId);
+
+        return "%s - user deleted.".formatted(userId);
+    }
+
+}
