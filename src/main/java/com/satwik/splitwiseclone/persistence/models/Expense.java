@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Expense")
+@Table(name = "expense")
 public class Expense {
 
     @Id
@@ -35,7 +35,7 @@ public class Expense {
     @Column(name = "created_at")
     private String expenseCreatedAt;
 
-    @OneToMany(mappedBy = "Expense", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<ExpenseShare> expenseShareList;
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ExpenseDTO {
 
-    private int groupId;
+    private String payer_name;
 
     private double amount;
 
@@ -22,6 +22,6 @@ public class ExpenseDTO {
 
     private String date;
 
-    private List<ExpenseShare> expenseShareList;
+    private List<PayeeDTO> payees;
 
 }

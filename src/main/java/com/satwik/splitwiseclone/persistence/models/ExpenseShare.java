@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Expense_Share")
+@Table(name = "expense_share")
 public class ExpenseShare {
 
     @EmbeddedId

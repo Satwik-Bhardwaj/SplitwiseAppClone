@@ -39,16 +39,20 @@ public class UserServiceImpl implements UserService {
         // TODO : encrypt the password after adding the security
         user.setPassword(request.getPassword());
 
+        User newUser = userRepository.save(user);
+
         // creating the non group expenses group
         Group group = new Group();
         group.setGroupName("Non Grouped Expenses");
-        group.setUser(user);
+        group.setUser(newUser);
 
         // save the group
         groupRepository.save(group);
 
-        return user.getUsername();
+        return request.getUsername();
     }
+
+
 
     @Override
     public UserDTO findUserById(int userId) {
@@ -62,8 +66,7 @@ public class UserServiceImpl implements UserService {
         UserDTO userResult = new UserDTO(
                 user.getUsername(),
                 user.getEmail(),
-                new PhoneDTO(user.getCountryCode(), user.getPhoneNumber()),
-                user.getUserCreatedAt()
+                new PhoneDTO(user.getCountryCode(), user.getPhoneNumber())
         );
 
         return userResult;
@@ -71,10 +74,38 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public String deleteUser(int userId) {
         userRepository.deleteById(userId);
 
         return "%s - user deleted.".formatted(userId);
+    }
+
+    @Override
+    @Transactional
+    public String updateUser(int userId, RegisterUserRequest request) {
+
+        Optional<User> user = userRepository.findById(userId);
+
+        if(!user.isPresent())
+            return "User doesn't exists so can't be update.";
+
+
+        User fetchedUser = user.get();
+
+        // setting user id separately
+
+        fetchedUser.setUsername(request.getUsername());
+        fetchedUser.setEmail(request.getEmail());
+        fetchedUser.setCountryCode(request.getPhoneDTO().getCountryCode());
+        fetchedUser.setPhoneNumber(request.getPhoneDTO().getPhoneNumber());
+
+        // TODO : encrypt the password after adding the security
+        fetchedUser.setPassword(request.getPassword());
+
+        userRepository.save(fetchedUser);
+
+        return request.getUsername() + " updated successfully.";
     }
 
 }

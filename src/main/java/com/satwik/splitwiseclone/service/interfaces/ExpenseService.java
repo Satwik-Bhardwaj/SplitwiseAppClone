@@ -6,27 +6,40 @@ import com.satwik.splitwiseclone.persistence.models.Expense;
 import java.util.List;
 
 public interface ExpenseService {
+    String createNonGroupedExpense(int userId, ExpenseDTO expenseDTO);
 
-    // create new expense in a Group
-    String createExpenseInGroup(ExpenseDTO expenseDTO, int groupId, int userId);
+    String createGroupedExpense(int userId, int groupId, ExpenseDTO expenseDTO);
 
-    // create new expense not in a group
-    String createExpense(ExpenseDTO expenseDTO, int userId);
-
-    // delete expense
     String deleteExpenseById(int expenseId);
 
-    // find all expense
-    List<ExpenseDTO> findAllExpense(int userId);
+    String addUserToExpense(int expenseId, int payeeId);
 
-    // find new expense
-    ExpenseDTO findExpenseById(int expenseId, int userId);
+    String removeUserFromExpense(int expenseId, int payeeId);
 
+    ExpenseDTO findExpenseById(int expenseId);
 
-    // delete an expense
-    String deleteExpenseById(int expenseId, int userId);
+    List<ExpenseDTO> findAllExpense(int groupId);
 
-    // add user to expense
-    String addUserToExpense(int expenseId, int userId, int payerId);
+//    // create new expense in a Group
+//    String createExpenseInGroup(ExpenseDTO expenseDTO, int groupId, int userId);
+//
+//    // create new expense not in a group
+//    String createExpense(ExpenseDTO expenseDTO, int userId);
+//
+//    // delete expense
+//    String deleteExpenseById(int expenseId);
+//
+//    // find all expense
+//    List<ExpenseDTO> findAllExpense(int userId);
+//
+//    // find new expense
+//    ExpenseDTO findExpenseById(int expenseId, int userId);
+//
+//
+//    // delete an expense
+//    String deleteExpenseById(int expenseId, int userId);
+//
+//    // add user to expense
+//    String addUserToExpense(int expenseId, int userId, int payerId);
 
 }

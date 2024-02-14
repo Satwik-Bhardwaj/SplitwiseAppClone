@@ -1,6 +1,5 @@
 package com.satwik.splitwiseclone.persistence.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
+public class PayeeDTO {
 
     String username;
 
-    String email;
-
-    PhoneDTO phone;
+    double amount;
 
 }

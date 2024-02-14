@@ -6,11 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupDTO {
 
-    private String groupName;
+    private String group_name;
+
+    private String owner;
+
+    private List<ExpenseDTO> expenses;
 
 }
