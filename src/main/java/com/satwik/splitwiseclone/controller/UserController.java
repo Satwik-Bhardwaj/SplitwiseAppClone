@@ -1,7 +1,7 @@
 package com.satwik.splitwiseclone.controller;
 
-import com.satwik.splitwiseclone.persistence.dto.RegisterUserRequest;
-import com.satwik.splitwiseclone.persistence.dto.UserDTO;
+import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

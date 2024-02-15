@@ -1,7 +1,6 @@
 package com.satwik.splitwiseclone.service.interfaces;
 
-import com.satwik.splitwiseclone.persistence.dto.ExpenseDTO;
-import com.satwik.splitwiseclone.persistence.models.Expense;
+import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseDTO;
 
 import java.util.List;
 

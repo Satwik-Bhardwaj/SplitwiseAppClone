@@ -1,8 +1,6 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.persistence.dto.ExpenseDTO;
-import com.satwik.splitwiseclone.persistence.models.Expense;
-import com.satwik.splitwiseclone.persistence.models.Group;
+import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseDTO;
 import com.satwik.splitwiseclone.repository.ExpenseRepository;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {

@@ -1,11 +1,7 @@
 package com.satwik.splitwiseclone.service.interfaces;
 
-import com.satwik.splitwiseclone.persistence.dto.RegisterUserRequest;
-import com.satwik.splitwiseclone.persistence.dto.UserDTO;
-import com.satwik.splitwiseclone.persistence.models.User;
-import com.satwik.splitwiseclone.repository.UserRepository;
-
-import java.util.List;
+import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 
 public interface UserService {
     String saveUser(RegisterUserRequest registerUserRequest);

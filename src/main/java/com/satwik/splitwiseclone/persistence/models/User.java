@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -34,11 +33,8 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Expense> expenseList;
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<Group> groupList;
-
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Group> groups;
+    private List<Group> groupList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ExpenseShare> userInvolvedInExpenses;

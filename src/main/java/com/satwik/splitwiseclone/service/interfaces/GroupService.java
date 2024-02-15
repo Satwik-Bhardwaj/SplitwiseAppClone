@@ -1,20 +1,19 @@
 package com.satwik.splitwiseclone.service.interfaces;
 
-import com.satwik.splitwiseclone.persistence.dto.ExpenseDTO;
-import com.satwik.splitwiseclone.persistence.dto.GroupDTO;
-
-import java.util.List;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupDTO;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupListDTO;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupUpdateRequest;
 
 public interface GroupService {
     String createGroup(GroupDTO groupDTO, int userId);
 
-    String deleteGroupById(int groupId);
+    String deleteGroupByGroupId(int groupId);
 
-    GroupDTO findGroupById(int groupId);
+    GroupDTO findGroupByGroupId(int groupId);
 
-    String updateGroup(GroupDTO groupDTO, int groupId);
+    String updateGroup(GroupUpdateRequest groupUpdateRequest, int groupId);
 
-    List<GroupDTO> findAllGroup(int userId);
+    GroupListDTO findAllGroup(int userId);
 
 //    // create new group
 //    String createGroup(GroupDTO groupDTO, int userId);

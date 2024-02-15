@@ -19,7 +19,7 @@ public class Expense {
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "payer_id")
     private User user;
 
@@ -31,9 +31,6 @@ public class Expense {
 
     @Column(name = "date")
     private String date;
-
-    @Column(name = "created_at")
-    private String expenseCreatedAt;
 
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
     private List<ExpenseShare> expenseShareList;

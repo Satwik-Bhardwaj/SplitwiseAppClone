@@ -1,6 +1,6 @@
 package com.satwik.splitwiseclone.controller;
 
-import com.satwik.splitwiseclone.persistence.dto.ExpenseDTO;
+import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseDTO;
 import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

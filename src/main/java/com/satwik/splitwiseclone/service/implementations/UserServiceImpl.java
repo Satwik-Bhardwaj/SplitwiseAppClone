@@ -1,20 +1,21 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.persistence.dto.PhoneDTO;
-import com.satwik.splitwiseclone.persistence.dto.RegisterUserRequest;
-import com.satwik.splitwiseclone.persistence.dto.UserDTO;
+import com.satwik.splitwiseclone.persistence.dto.user.PhoneDTO;
+import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.persistence.models.Group;
 import com.satwik.splitwiseclone.persistence.models.User;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -33,13 +34,13 @@ public class UserServiceImpl implements UserService {
 
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
-        user.setCountryCode(request.getPhoneDTO().getCountryCode());
-        user.setPhoneNumber(request.getPhoneDTO().getPhoneNumber());
+        user.setCountryCode(request.getPhone().getCountryCode());
+        user.setPhoneNumber(request.getPhone().getPhoneNumber());
 
         // TODO : encrypt the password after adding the security
         user.setPassword(request.getPassword());
 
-
+        // saving the user and getting the saved entity
         user = userRepository.save(user);
 
         // creating the non group expenses group
@@ -52,8 +53,6 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.save(user).toString();
     }
-
-
 
     @Override
     public UserDTO findUserById(int userId) {
@@ -98,8 +97,8 @@ public class UserServiceImpl implements UserService {
 
         fetchedUser.setUsername(request.getUsername());
         fetchedUser.setEmail(request.getEmail());
-        fetchedUser.setCountryCode(request.getPhoneDTO().getCountryCode());
-        fetchedUser.setPhoneNumber(request.getPhoneDTO().getPhoneNumber());
+        fetchedUser.setCountryCode(request.getPhone().getCountryCode());
+        fetchedUser.setPhoneNumber(request.getPhone().getPhoneNumber());
 
         // TODO : encrypt the password after adding the security
         fetchedUser.setPassword(request.getPassword());

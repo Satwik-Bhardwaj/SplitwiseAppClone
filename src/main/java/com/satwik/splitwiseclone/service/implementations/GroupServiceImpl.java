@@ -1,7 +1,10 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.persistence.dto.ExpenseDTO;
-import com.satwik.splitwiseclone.persistence.dto.GroupDTO;
+import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseListDTO;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupDTO;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupListDTO;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupListDTOWithin;
+import com.satwik.splitwiseclone.persistence.dto.group.GroupUpdateRequest;
 import com.satwik.splitwiseclone.persistence.models.Expense;
 import com.satwik.splitwiseclone.persistence.models.Group;
 import com.satwik.splitwiseclone.persistence.models.User;
@@ -41,10 +44,8 @@ public class GroupServiceImpl implements GroupService {
 
         // create the group
         Group group = new Group();
-        group.setGroupName(groupDTO.getGroup_name());
+        group.setGroupName(groupDTO.getGroupName());
         group.setUser(user.get());
-
-        System.out.println(group);
 
         // save the group
         groupRepository.save(group);
@@ -53,55 +54,91 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupDTO> findAllGroup(int userId) {
+    public GroupListDTO findAllGroup(int userId) {
 
-        return null;
+        List<Group> groupList = groupRepository.findByUserId(userId);
 
+        Optional<User> user = userRepository.findById(userId);
+
+        // TODO : add exception for user not found
+        if (!user.isPresent()) return null;
+
+        GroupListDTO groupListDTO = new GroupListDTO();
+        groupListDTO.setOwner(user.get().getUsername());
+
+        List<GroupListDTOWithin> groupListDTOS = new ArrayList<>();
+
+        // mapping each group list to group dto list
+        for (Group group : groupList) {
+
+            groupListDTOS.add(new GroupListDTOWithin(group.getId(), group.getGroupName()));
+
+        }
+
+        groupListDTO.setGroups(groupListDTOS);
+
+        return groupListDTO;
     }
 
     @Override
     @Transactional
-    public String deleteGroupById(int groupId) {
+    public String deleteGroupByGroupId(int groupId) {
 
+        // TODO : add code to check the default group (default group can't be deleted)
         groupRepository.deleteById(groupId);
         return "Successfully deleted the group - %d.".formatted(groupId);
 
     }
 
     @Override
-    public GroupDTO findGroupById(int groupId) {
+    public GroupDTO findGroupByGroupId(int groupId) {
 
         Group group = null;
         if(groupRepository.findById(groupId).isPresent())
             group = groupRepository.findById(groupId).get();
 
-        GroupDTO resultDTO = new GroupDTO();
-        resultDTO.setGroup_name(group.getGroupName());
-        resultDTO.setOwner(group.getUser().getUsername());
+        GroupDTO groupDTO = new GroupDTO();
+
+        groupDTO.setGroupId(group.getId());
+        groupDTO.setGroupName(group.getGroupName());
+        groupDTO.setOwner(group.getUser().getUsername());
 
         List<Expense> expenseList = expenseRepository.findByGroupId(groupId);
-        List<ExpenseDTO> expenseDTOList = new ArrayList<>();
+
+        List<ExpenseListDTO> expenseDTOList = new ArrayList<>();
+
         for (Expense expense : expenseList) {
+
             // mapping expense to expense DTO
 
-            ExpenseDTO expenseDTO = new ExpenseDTO();
+            ExpenseListDTO expenseListDTO = new ExpenseListDTO();
+            expenseListDTO.setAmount(expense.getAmount());
+            expenseListDTO.setDescription(expenseListDTO.getDescription());
+            expenseListDTO.setExpenseCreatedAt(expense.getDate());
 
-            expenseDTO.setPayer_name(expense.getUser().getUsername());
-            expenseDTO.setAmount(expense.getAmount());
-            expenseDTO.setDescription(expense.getDescription());
-            expenseDTO.setDate(expense.getDate());
-            // TODO : add payees DTO
-            expenseDTOList.add(expenseDTO);
+            expenseDTOList.add(expenseListDTO);
         }
 
-        resultDTO.setExpenses(expenseDTOList);
+        groupDTO.setExpenses(expenseDTOList);
 
-        return resultDTO;
+        return groupDTO;
     }
 
     @Override
     @Transactional
-    public String updateGroup(GroupDTO groupDTO, int groupId) {
-        return null;
+    public String updateGroup(GroupUpdateRequest groupUpdateRequest, int groupId) {
+
+        Optional<Group> group = groupRepository.findById(groupId);
+
+        if (!group.isPresent())
+            return "Group is not present so can't be updated.";
+
+        Group fetchedGroup = group.get();
+
+        fetchedGroup.setGroupName(groupUpdateRequest.getGroupName());
+
+        groupRepository.save(fetchedGroup);
+
+        return "%d - Group update successfully!".formatted(fetchedGroup.getId());
     }
 }

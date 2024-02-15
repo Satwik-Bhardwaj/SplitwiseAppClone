@@ -1,4 +1,4 @@
-package com.satwik.splitwiseclone.persistence.dto;
+package com.satwik.splitwiseclone.persistence.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
