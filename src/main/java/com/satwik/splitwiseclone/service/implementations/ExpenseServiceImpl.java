@@ -54,7 +54,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public String createNonGroupedExpense(int userId, ExpenseDTO expenseDTO) {
-        return null;
+        
     }
 
     @Override
@@ -87,18 +87,4 @@ public class ExpenseServiceImpl implements ExpenseService {
         return null;
     }
 
-//    @Override
-//    public ExpenseDTO findExpenseById(int expenseId, int userId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public String deleteExpenseById(int expenseId, int userId) {
-//        return null;
-//    }
-//
-//    @Override
-//    public String addUserToExpense(int expenseId, int userId, int payerId) {
-//        return null;
-//    }
 }

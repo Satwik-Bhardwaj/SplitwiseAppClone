@@ -1,12 +1,7 @@
 package com.satwik.splitwiseclone.persistence.dto.expense;
 
 import com.satwik.splitwiseclone.persistence.dto.PayeeDTO;
-import com.satwik.splitwiseclone.persistence.models.ExpenseShare;
-import com.satwik.splitwiseclone.persistence.models.User;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
