@@ -44,6 +44,8 @@ public class GroupServiceImpl implements GroupService {
         group.setGroupName(groupDTO.getGroup_name());
         group.setUser(user.get());
 
+        System.out.println(group);
+
         // save the group
         groupRepository.save(group);
 

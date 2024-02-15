@@ -39,17 +39,18 @@ public class UserServiceImpl implements UserService {
         // TODO : encrypt the password after adding the security
         user.setPassword(request.getPassword());
 
-        User newUser = userRepository.save(user);
+
+        user = userRepository.save(user);
 
         // creating the non group expenses group
         Group group = new Group();
         group.setGroupName("Non Grouped Expenses");
-        group.setUser(newUser);
+        group.setUser(user);
 
         // save the group
         groupRepository.save(group);
 
-        return request.getUsername();
+        return userRepository.save(user).toString();
     }
 
 
