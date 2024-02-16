@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ExpenseDTO {
 
-    private String payer_name;
+    private String payerName;
 
     private double amount;
 

@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
         Group group = new Group();
         group.setGroupName("Non Grouped Expenses");
         group.setUser(user);
+        group.setDefaultGroup(true);
 
         // save the group
         groupRepository.save(group);

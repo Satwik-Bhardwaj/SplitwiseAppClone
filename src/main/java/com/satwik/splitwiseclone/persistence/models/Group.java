@@ -16,6 +16,9 @@ public class Group {
     @Column(name = "group_name")
     private String groupName;
 
+    @Column(name = "default_group")
+    private boolean defaultGroup;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

@@ -23,9 +23,6 @@ public class ExpenseController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.createNonGroupedExpense(userId, expenseDTO));
 
-//        // fetch default group id
-//        Group group = groupService.getNonGroupByUserId(userId);
-//        int groupId = group.getId();
     }
 
     // create a new expense which is grouped

@@ -9,7 +9,7 @@ CREATE TABLE `user` (
     `username` VARCHAR(255) NOT NULL UNIQUE,
     `email` VARCHAR(255) UNIQUE,
     `phone_country_code` VARCHAR(5) NOT NULL,
-    `phone_number` INTEGER NOT NULL,
+    `phone_number` BIGINT NOT NULL,
     CONSTRAINT `unique_phone_number_with_country_code` UNIQUE (`phone_country_code`, `phone_number`),
     `password` VARCHAR(255) NOT NULL
 );
@@ -18,6 +18,7 @@ CREATE TABLE `group_table` (
     `group_id` INTEGER AUTO_INCREMENT PRIMARY KEY,
     `group_name` VARCHAR(255) NOT NULL,
     `user_id` INTEGER,
+    `default_group` BOOLEAN,
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );
 
@@ -26,9 +27,9 @@ CREATE TABLE `expense` (
     `expense_id` INTEGER AUTO_INCREMENT PRIMARY KEY,
     `group_id` INTEGER NOT NULL,
     `payer_id` INTEGER NOT NULL,
-    `amount` DECIMAL(10, 2) NOT NULL,
+    `amount` FLOAT,
     `description` VARCHAR(255),
-    `date` DATE NOT NULL,
+    `date` VARCHAR(255),
     FOREIGN KEY (`group_id`) REFERENCES `group_table`(`group_id`) ON DELETE CASCADE,
     FOREIGN KEY (`payer_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );
@@ -36,9 +37,9 @@ CREATE TABLE `expense` (
 -- Expense_Share Table
 CREATE TABLE `expense_share` (
     `sharing_expense_id` INTEGER AUTO_INCREMENT PRIMARY KEY,
-    `expense_id` INTEGER,
-    `user_id` INTEGER,
-    `share` DECIMAL(10, 2) NOT NULL,
+    `expense_id` INTEGER NOT NULL,
+    `user_id` INTEGER NOT NULL,
+    `shared_amount` FLOAT,
     CONSTRAINT `user_expense_id` UNIQUE (`expense_id`, `user_id`),
     FOREIGN KEY (`expense_id`) REFERENCES `expense`(`expense_id`),
     FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`)
@@ -51,7 +52,7 @@ CREATE TABLE `settlement` (
     `payee_id` INTEGER NOT NULL,
     `amount` DECIMAL(10, 2) NOT NULL,
     `description` VARCHAR(255),
-    `date` DATE,
+    `date` VARCHAR(255),
     FOREIGN KEY (`payer_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE,
     FOREIGN KEY (`payee_id`) REFERENCES `user`(`user_id`) ON DELETE CASCADE
 );

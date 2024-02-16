@@ -8,15 +8,17 @@ import lombok.Data;
 @Table(name = "expense_share")
 public class ExpenseShare {
 
-    @EmbeddedId
-    private SharingExpenseId id;
+    @Id
+    @Column(name = "sharing_expense_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("expenseId")
+    @JoinColumn(name = "expense_id")
     private Expense expense;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "shared_amount")
