@@ -114,7 +114,7 @@ public class GroupServiceImpl implements GroupService {
 
             ExpenseListDTO expenseListDTO = new ExpenseListDTO();
             expenseListDTO.setAmount(expense.getAmount());
-            expenseListDTO.setDescription(expenseListDTO.getDescription());
+            expenseListDTO.setDescription(expense.getDescription());
             expenseListDTO.setExpenseCreatedAt(expense.getDate());
 
             expenseDTOList.add(expenseListDTO);

@@ -1,5 +1,6 @@
-package com.satwik.splitwiseclone.persistence.dto;
+package com.satwik.splitwiseclone.persistence.dto.user;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
