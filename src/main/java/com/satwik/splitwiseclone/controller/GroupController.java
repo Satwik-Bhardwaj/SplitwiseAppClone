@@ -7,7 +7,11 @@ import com.satwik.splitwiseclone.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping("/api/v1/group")
@@ -17,35 +21,76 @@ public class GroupController {
     GroupService groupService;
 
     // create a group for a user
-    // TODO : user id might not required after implementing spring security
     @PostMapping("/create")
-    public ResponseEntity<String> createGroup(@RequestParam int userId, @RequestBody GroupDTO groupDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupDTO, userId));
+    public ResponseEntity<String> createGroup(@RequestBody GroupDTO groupDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupDTO, userId));
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // delete a group in a user account
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteGroup(@RequestParam int groupId) {
-        return ResponseEntity.ok(groupService.deleteGroupByGroupId(groupId));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        try {
+            return ResponseEntity.ok(groupService.deleteGroupByGroupId(groupId, userId));
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // get a group in a user account
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupDTO> findGroup(@PathVariable int groupId) {
-        GroupDTO groupDTO = groupService.findGroupByGroupId(groupId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        GroupDTO groupDTO = null;
+        try {
+            groupDTO = groupService.findGroupByGroupId(groupId, userId);
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
+
         return ResponseEntity.status(HttpStatus.FOUND).body(groupDTO);
     }
 
     // update a group in a user account
     @PutMapping("/update/{groupId}")
     public ResponseEntity<String> updateGroup(@RequestBody GroupUpdateRequest groupUpdateRequest, @PathVariable int groupId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(groupUpdateRequest, groupId));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(groupUpdateRequest, groupId, userId));
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // get all the groups of the user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<GroupListDTO> findAllGroup(@PathVariable int userId) {
-        return ResponseEntity.status(HttpStatus.FOUND).body(groupService.findAllGroup(userId));
+    @GetMapping("/user")
+    public ResponseEntity<GroupListDTO> findAllGroup() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        try {
+            return ResponseEntity.status(HttpStatus.FOUND).body(groupService.findAllGroup(userId));
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

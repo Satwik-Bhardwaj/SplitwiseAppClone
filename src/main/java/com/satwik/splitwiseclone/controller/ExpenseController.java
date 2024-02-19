@@ -21,7 +21,7 @@ public class ExpenseController {
     @PostMapping("/create")
     public ResponseEntity<String> createExpense(@RequestParam int userId, @RequestBody ExpenseDTO expenseDTO) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.createNonGroupedExpense(userId, expenseDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.createNonGroupedExpense(userId, expenseDTO));
 
     }
 
@@ -29,7 +29,7 @@ public class ExpenseController {
     @PostMapping("/create/{groupId}")
     public ResponseEntity<String> createExpense(@RequestParam int userId, @PathVariable int groupId, @RequestBody ExpenseDTO expenseDTO) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.createGroupedExpense(userId, groupId, expenseDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.createGroupedExpense(userId, groupId, expenseDTO));
 
     }
 
@@ -45,7 +45,7 @@ public class ExpenseController {
     @PostMapping("/add-payee/{expenseId}")
     public ResponseEntity<String> addPayeeToExpense(@RequestParam int payeeId, @PathVariable int expenseId) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.addUserToExpense(expenseId, payeeId));
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.addUserToExpense(expenseId, payeeId));
 
     }
 
@@ -61,7 +61,7 @@ public class ExpenseController {
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseDTO> findExpense(@PathVariable int expenseId) {
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(expenseService.findExpenseById(expenseId));
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findExpenseById(expenseId));
 
     }
 
@@ -69,7 +69,7 @@ public class ExpenseController {
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<ExpenseDTO>> findAllExpense(@PathVariable int groupId) {
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(expenseService.findAllExpense(groupId));
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findAllExpense(groupId));
 
     }
 

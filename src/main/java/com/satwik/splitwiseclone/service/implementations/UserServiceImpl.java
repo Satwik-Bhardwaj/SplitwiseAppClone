@@ -11,8 +11,13 @@ import com.satwik.splitwiseclone.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.nio.file.AccessDeniedException;
 import java.util.Optional;
 
 @Service
@@ -23,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     GroupRepository groupRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder pwdEncoder;
 
     // for save and update
     @Override
@@ -36,8 +44,7 @@ public class UserServiceImpl implements UserService {
         user.setCountryCode(request.getPhone().getCountryCode());
         user.setPhoneNumber(request.getPhone().getPhoneNumber());
 
-        // TODO : encrypt the password after adding the security
-        user.setPassword(request.getPassword());
+        user.setPassword(pwdEncoder.encode(request.getPassword()));
 
         // saving the user and getting the saved entity
         user = userRepository.save(user);
@@ -54,14 +61,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user).toString();
     }
 
+
     @Override
-    public UserDTO findUserById(int userId) {
+    public UserDTO findUserById(int userId) throws Exception {
 
-        User user = null;
-        if(userRepository.findById(userId).isPresent())
-            user = userRepository.findById(userId).get();
-
-        // TODO : if user==null return exception :: create new exception
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         UserDTO userResult = new UserDTO(
                 user.getUsername(),
@@ -72,10 +76,12 @@ public class UserServiceImpl implements UserService {
         return userResult;
     }
 
-
     @Override
     @Transactional
-    public String deleteUser(int userId) {
+    public String deleteUser(int userId) throws Exception{
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
         userRepository.deleteById(userId);
 
         return "%s - user deleted.".formatted(userId);
@@ -83,29 +89,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String updateUser(int userId, RegisterUserRequest request) {
+    public String updateUser(int userId, RegisterUserRequest request) throws Exception{
 
-        Optional<User> user = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        if(!user.isPresent())
-            return "User doesn't exists so can't be update.";
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setCountryCode(request.getPhone().getCountryCode());
+        user.setPhoneNumber(request.getPhone().getPhoneNumber());
+        user.setPassword(pwdEncoder.encode(request.getPassword()));
+        userRepository.save(user);
 
-
-        User fetchedUser = user.get();
-
-        // setting user id separately
-
-        fetchedUser.setUsername(request.getUsername());
-        fetchedUser.setEmail(request.getEmail());
-        fetchedUser.setCountryCode(request.getPhone().getCountryCode());
-        fetchedUser.setPhoneNumber(request.getPhone().getPhoneNumber());
-
-        // TODO : encrypt the password after adding the security
-        fetchedUser.setPassword(request.getPassword());
-
-        userRepository.save(fetchedUser);
-
-        return request.getUsername() + " updated successfully.";
+        return request.getUsername() + "updated successfully.";
     }
 
 }

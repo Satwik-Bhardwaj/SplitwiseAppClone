@@ -7,19 +7,20 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtService {
+public class JwtUtil {
 
     // secret key
     @Value("${jwt.secretKey}")
     private String SECRET_KEY;
 
     // expiration time
-    @Value("${jwt.expirationTimeInMinutes")
+    @Value("${jwt.expirationTimeInMinutes}")
     private long EXPIRATION_TIME;
 
     // generate token method
     public String generateToken(String userId) {
-
+        // here we can get the user entity instead of userId to make it more secure
+        // also we can create our own claims set to the builder for generate token
         Date issuedAt = new Date(System.currentTimeMillis());
         Date expirationTime = new Date((EXPIRATION_TIME * 60 * 1000) + issuedAt.getTime());
 

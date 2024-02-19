@@ -1,7 +1,6 @@
 package com.satwik.splitwiseclone.configuration.filter;
 
-import com.satwik.splitwiseclone.configuration.jwt.JwtService;
-import io.jsonwebtoken.Jwts;
+import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,17 +10,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtService jwtService;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -32,17 +31,17 @@ public class SecurityFilter extends OncePerRequestFilter {
         // read the token from the header
         String token = request.getHeader("Authorization");
 
-        if(token != null ) {
+        if(token != null) {
             // get the user id using the token
-            String userId = jwtService.getUserId(token);
+            String userId = jwtUtil.getUserId(token);
 
             // username should not be empty, cont-auth must be empty
-            if(userId !=null && SecurityContextHolder.getContext().getAuthentication() == null)  {
+            if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null)  {
                 // get the user details
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
                 // validate token
-                boolean isValid = jwtService.validateToken(token, userDetails.getUsername());
+                boolean isValid = jwtUtil.validateToken(token, userDetails.getUsername());
 
                 if(isValid) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, userDetails.getPassword(), userDetails.getAuthorities());

@@ -14,8 +14,11 @@ import com.satwik.splitwiseclone.repository.UserRepository;
 import com.satwik.splitwiseclone.service.interfaces.GroupService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,18 +37,14 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String createGroup(GroupDTO groupDTO, int userId) {
+    public String createGroup(GroupDTO groupDTO, int userId) throws AccessDeniedException {
 
-        // fetch the user first
-        Optional<User> user = userRepository.findById(userId);
-
-        // TODO : create user not found exception :: if user==null
-        if(!user.isPresent()) return "%d user not found. Hence group can't be created.".formatted(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // create the group
         Group group = new Group();
         group.setGroupName(groupDTO.getGroupName());
-        group.setUser(user.get());
+        group.setUser(user);
         group.setDefaultGroup(false);
 
         // save the group
@@ -55,27 +54,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupListDTO findAllGroup(int userId) {
+    public GroupListDTO findAllGroup(int userId) throws AccessDeniedException {
 
-        List<Group> groupList = groupRepository.findByUserId(userId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
-        Optional<User> user = userRepository.findById(userId);
-
-        // TODO : add exception for user not found
-        if (!user.isPresent()) return null;
+        List<Group> groupList = groupRepository.findByUserId(user.getId());
 
         GroupListDTO groupListDTO = new GroupListDTO();
-        groupListDTO.setOwner(user.get().getUsername());
+        groupListDTO.setOwner(user.getUsername());
 
         List<GroupListDTOWithin> groupListDTOS = new ArrayList<>();
 
         // mapping each group list to group dto list
         for (Group group : groupList) {
-
             groupListDTOS.add(new GroupListDTOWithin(group.getId(), group.getGroupName()));
-
         }
-
         groupListDTO.setGroups(groupListDTOS);
 
         return groupListDTO;
@@ -83,7 +76,12 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String deleteGroupByGroupId(int groupId) {
+    public String deleteGroupByGroupId(int groupId, int userId) throws AccessDeniedException {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+
+        if (user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
 
         // TODO : add code to check the default group (default group can't be deleted)
         groupRepository.deleteById(groupId);
@@ -92,11 +90,12 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDTO findGroupByGroupId(int groupId) {
+    public GroupDTO findGroupByGroupId(int groupId, int userId) throws AccessDeniedException {
 
-        Group group = null;
-        if(groupRepository.findById(groupId).isPresent())
-            group = groupRepository.findById(groupId).get();
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+
+        if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
 
         GroupDTO groupDTO = new GroupDTO();
 
@@ -105,21 +104,17 @@ public class GroupServiceImpl implements GroupService {
         groupDTO.setOwner(group.getUser().getUsername());
 
         List<Expense> expenseList = expenseRepository.findByGroupId(groupId);
-
         List<ExpenseListDTO> expenseDTOList = new ArrayList<>();
 
         for (Expense expense : expenseList) {
 
             // mapping expense to expense DTO
-
             ExpenseListDTO expenseListDTO = new ExpenseListDTO();
             expenseListDTO.setAmount(expense.getAmount());
             expenseListDTO.setDescription(expense.getDescription());
             expenseListDTO.setExpenseCreatedAt(expense.getDate());
-
             expenseDTOList.add(expenseListDTO);
         }
-
         groupDTO.setExpenses(expenseDTOList);
 
         return groupDTO;
@@ -127,19 +122,16 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String updateGroup(GroupUpdateRequest groupUpdateRequest, int groupId) {
+    public String updateGroup(GroupUpdateRequest groupUpdateRequest, int groupId, int userId) throws AccessDeniedException {
 
-        Optional<Group> group = groupRepository.findById(groupId);
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
 
-        if (!group.isPresent())
-            return "Group is not present so can't be updated.";
+        if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
 
-        Group fetchedGroup = group.get();
+        group.setGroupName(groupUpdateRequest.getGroupName());
+        groupRepository.save(group);
 
-        fetchedGroup.setGroupName(groupUpdateRequest.getGroupName());
-
-        groupRepository.save(fetchedGroup);
-
-        return "%d - Group update successfully!".formatted(fetchedGroup.getId());
+        return "%d - Group update successfully!".formatted(group.getId());
     }
 }
