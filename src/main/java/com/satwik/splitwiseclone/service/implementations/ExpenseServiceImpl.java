@@ -41,7 +41,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
         expense.setDescription(expenseDTO.getDescription());
-        expense.setDate(expenseDTO.getDate());
+        expense.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         expense.setGroup(group);
         expense.setUser(user);
         expenseRepository.save(expense);
