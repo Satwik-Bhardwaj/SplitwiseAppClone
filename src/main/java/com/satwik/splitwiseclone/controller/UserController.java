@@ -47,7 +47,7 @@ public class UserController {
         int userId = Integer.parseInt(authentication.getName());
 
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.updateUser(userId, updateUserRequest));
+            return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, updateUserRequest));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

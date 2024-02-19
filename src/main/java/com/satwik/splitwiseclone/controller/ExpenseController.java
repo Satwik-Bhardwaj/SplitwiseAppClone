@@ -5,6 +5,8 @@ import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +19,11 @@ public class ExpenseController {
     ExpenseService expenseService;
 
     // create a new expense which is not grouped
-    // TODO : user id might not required after implementing spring security
     @PostMapping("/create")
-    public ResponseEntity<String> createExpense(@RequestParam int userId, @RequestBody ExpenseDTO expenseDTO) {
+    public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
 
         return ResponseEntity.status(HttpStatus.OK).body(expenseService.createNonGroupedExpense(userId, expenseDTO));
 
@@ -27,7 +31,10 @@ public class ExpenseController {
 
     // create a new expense which is grouped
     @PostMapping("/create/{groupId}")
-    public ResponseEntity<String> createExpense(@RequestParam int userId, @PathVariable int groupId, @RequestBody ExpenseDTO expenseDTO) {
+    public ResponseEntity<String> createExpense(@PathVariable int groupId, @RequestBody ExpenseDTO expenseDTO) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
 
         return ResponseEntity.status(HttpStatus.OK).body(expenseService.createGroupedExpense(userId, groupId, expenseDTO));
 
@@ -37,7 +44,10 @@ public class ExpenseController {
     @DeleteMapping("/delete/{expenseId}")
     public ResponseEntity<String> deleteExpense(@PathVariable int expenseId) {
 
-        return ResponseEntity.ok(expenseService.deleteExpenseById(expenseId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        return ResponseEntity.ok(expenseService.deleteExpenseById(expenseId, userId));
 
     }
 
@@ -45,7 +55,10 @@ public class ExpenseController {
     @PostMapping("/add-payee/{expenseId}")
     public ResponseEntity<String> addPayeeToExpense(@RequestParam int payeeId, @PathVariable int expenseId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(expenseService.addUserToExpense(expenseId, payeeId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.addUserToExpense(expenseId, payeeId, userId));
 
     }
 
@@ -53,7 +66,10 @@ public class ExpenseController {
     @DeleteMapping("/remove-payee/{expenseId}")
     public ResponseEntity<String> removePayeeFromExpense(@RequestParam int payeeId, @PathVariable int expenseId) {
 
-        return ResponseEntity.ok(expenseService.removeUserFromExpense(expenseId, payeeId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        return ResponseEntity.ok(expenseService.removeUserFromExpense(expenseId, payeeId, userId));
 
     }
 
@@ -61,7 +77,10 @@ public class ExpenseController {
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseDTO> findExpense(@PathVariable int expenseId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findExpenseById(expenseId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findExpenseById(expenseId, userId));
 
     }
 
@@ -69,9 +88,10 @@ public class ExpenseController {
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<ExpenseDTO>> findAllExpense(@PathVariable int groupId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findAllExpense(groupId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        int userId = Integer.parseInt(authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(expenseService.findAllExpense(groupId, userId));
 
     }
-
-
 }

@@ -9,14 +9,14 @@ public interface ExpenseService {
 
     String createGroupedExpense(int userId, int groupId, ExpenseDTO expenseDTO);
 
-    String deleteExpenseById(int expenseId);
+    String deleteExpenseById(int expenseId, int userId);
 
-    String addUserToExpense(int expenseId, int payeeId);
+    String addUserToExpense(int expenseId, int payeeId, int userId);
 
-    String removeUserFromExpense(int expenseId, int payeeId);
+    String removeUserFromExpense(int expenseId, int payeeId, int userId);
 
-    ExpenseDTO findExpenseById(int expenseId);
+    ExpenseDTO findExpenseById(int expenseId, int userId);
 
-    List<ExpenseDTO> findAllExpense(int groupId);
+    List<ExpenseDTO> findAllExpense(int groupId, int userId);
 
 }

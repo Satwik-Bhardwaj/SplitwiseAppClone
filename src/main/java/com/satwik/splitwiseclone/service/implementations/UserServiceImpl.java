@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(pwdEncoder.encode(request.getPassword()));
         userRepository.save(user);
 
-        return request.getUsername() + "updated successfully.";
+        return request.getUsername() + " updated successfully.";
     }
 
 }
