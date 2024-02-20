@@ -41,7 +41,7 @@ This Spring Boot project serves as a backend API for a clone of Splitwise, a pop
 
 ## Usage
 
-- **Authentication**: Use the `/api/authenticate` endpoint to obtain a JWT token by providing valid credentials.
+- **Authentication**: Use the `/api/v1/auth/login` endpoint to obtain a JWT token by providing valid credentials.
 - **Endpoints**: Utilize the provided endpoints to perform various operations such as user registration, group creation, expense management, etc.
 - **Authorization**: Ensure proper authorization by including the JWT token in the Authorization header for secured endpoints.
 
@@ -56,4 +56,4 @@ Contributions are welcome! If you'd like to contribute to this project, feel fre
 
 ## Contact
 
-For any inquiries or support, please contact [satwikbhardwaj123@gmail.com].
+For any inquiries or support, please contact satwikbhardwaj123@gmail.com.
