@@ -2,6 +2,8 @@ package com.satwik.splitwiseclone.persistence.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NonNull;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
@@ -39,4 +41,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ExpenseShare> userInvolvedInExpenses;
 
+    public User() {
+
+    }
 }
