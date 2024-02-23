@@ -33,7 +33,6 @@ public class AuthController {
             loginRequest.getUserId(), loginRequest.getPassword()
         ));
         String userId = authentication.getName();
-        System.out.println("called");
         String token = jwtUtil.generateToken(userId);
 
         return ResponseEntity.ok(new LoginResponse(token, "Successfully generated token!"));

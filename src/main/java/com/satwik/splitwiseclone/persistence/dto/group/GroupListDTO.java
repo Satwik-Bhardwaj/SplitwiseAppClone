@@ -1,5 +1,7 @@
 package com.satwik.splitwiseclone.persistence.dto.group;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 public class GroupListDTO {
 
+    @NotNull
     private String groupName;
 
+    @NotNull
+    @NotBlank
     private String owner;
 
+    @NotNull
     public List<GroupListDTOWithin> groups;
 
 }

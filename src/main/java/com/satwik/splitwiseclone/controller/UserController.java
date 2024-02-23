@@ -3,6 +3,7 @@ package com.satwik.splitwiseclone.controller;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class UserController {
 
     // register user
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegisterUserRequest registerUserRequest) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
 
         return ResponseEntity.status(HttpStatus.OK).body(userService.saveUser(registerUserRequest));
 
@@ -41,7 +42,7 @@ public class UserController {
 
     // update the user details
     @PutMapping("update")
-    public ResponseEntity<String> updateUser(@RequestBody RegisterUserRequest updateUserRequest) {
+    public ResponseEntity<String> updateUser(@Valid @RequestBody RegisterUserRequest updateUserRequest) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         int userId = Integer.parseInt(authentication.getName());
