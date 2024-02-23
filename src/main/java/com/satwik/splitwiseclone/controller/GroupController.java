@@ -28,7 +28,7 @@ public class GroupController {
         int userId = Integer.parseInt(authentication.getName());
 
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(groupService.createGroup(groupDTO, userId));
+            return ResponseEntity.status(HttpStatus.OK).body(groupService.createGroup(groupDTO, userId));
         } catch (AccessDeniedException e) {
             throw new RuntimeException(e);
         }
