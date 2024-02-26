@@ -14,9 +14,6 @@ import java.util.List;
 public class GroupListDTO {
 
     @NotNull
-    private String groupName;
-
-    @NotNull
     @NotBlank
     private String owner;
 
