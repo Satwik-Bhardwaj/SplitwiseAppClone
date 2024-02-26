@@ -6,12 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "group_table")
-public class Group {
-
-    @Id
-    @Column(name = "group_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class Group extends BaseEntity {
 
     @Column(name = "group_name")
     private String groupName;
@@ -19,7 +14,7 @@ public class Group {
     @Column(name = "default_group")
     private boolean defaultGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

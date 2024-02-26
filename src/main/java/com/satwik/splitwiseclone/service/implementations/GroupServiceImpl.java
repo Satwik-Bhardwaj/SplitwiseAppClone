@@ -22,6 +22,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -37,7 +38,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String createGroup(GroupDTO groupDTO, int userId) throws AccessDeniedException {
+    public String createGroup(GroupDTO groupDTO, UUID userId) throws AccessDeniedException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -54,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupListDTO findAllGroup(int userId) throws AccessDeniedException {
+    public GroupListDTO findAllGroup(UUID userId) throws AccessDeniedException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -76,7 +77,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String deleteGroupByGroupId(int groupId, int userId) throws AccessDeniedException {
+    public String deleteGroupByGroupId(UUID groupId, UUID userId) throws AccessDeniedException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
@@ -90,7 +91,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDTO findGroupByGroupId(int groupId, int userId) throws AccessDeniedException {
+    public GroupDTO findGroupByGroupId(UUID groupId, UUID userId) throws AccessDeniedException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
@@ -112,7 +113,7 @@ public class GroupServiceImpl implements GroupService {
             ExpenseListDTO expenseListDTO = new ExpenseListDTO();
             expenseListDTO.setAmount(expense.getAmount());
             expenseListDTO.setDescription(expense.getDescription());
-            expenseListDTO.setExpenseCreatedAt(expense.getDate());
+            expenseListDTO.setExpenseCreatedAt(String.valueOf(expense.getCreatedOn()));
             expenseDTOList.add(expenseListDTO);
         }
         groupDTO.setExpenses(expenseDTOList);
@@ -122,7 +123,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String updateGroup(GroupUpdateRequest groupUpdateRequest, int groupId, int userId) throws AccessDeniedException {
+    public String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId, UUID userId) throws AccessDeniedException {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));

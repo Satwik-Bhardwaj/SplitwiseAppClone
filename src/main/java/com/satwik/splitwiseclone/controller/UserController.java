@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
@@ -31,7 +33,7 @@ public class UserController {
     public ResponseEntity<UserDTO> getUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(userId));
@@ -45,7 +47,7 @@ public class UserController {
     public ResponseEntity<String> updateUser(@Valid @RequestBody RegisterUserRequest updateUserRequest) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, updateUserRequest));
@@ -60,7 +62,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.ok(userService.deleteUser(userId));

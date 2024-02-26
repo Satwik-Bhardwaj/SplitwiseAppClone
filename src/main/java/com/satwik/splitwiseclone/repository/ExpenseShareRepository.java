@@ -11,9 +11,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, Integer> {
+public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, UUID> {
 
 //    @Query(value = "SELECT user.username AS username, expense_share.shared_amount AS amount FROM expense_share INNER JOIN user ON expense_share.user_id = user.user_id WHERE expense_share.expense_id = ?1", nativeQuery = true)
 //    List<PayeeDTO> findPayeesWithAmountByExpenseId(int expenseId);
@@ -22,17 +23,17 @@ public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, Inte
             "FROM ExpenseShare es " +
             "INNER JOIN es.user u " +
             "WHERE es.expense.id = ?1")
-    List<PayeeDTO> findPayeesWithAmountByExpenseId(int expenseId);
+    List<PayeeDTO> findPayeesWithAmountByExpenseId(UUID expenseId);
 
     @Query(value = "SELECT COUNT(*) FROM ExpenseShare es WHERE es.expense.id = ?1")
-    int findCountOfPayee(int expenseId);
+    int findCountOfPayee(UUID expenseId);
 
     @Query(value = "SELECT es FROM ExpenseShare es WHERE es.expense.id = ?1")
-    List<ExpenseShare> findExpenseShareById(int expenseId);
+    List<ExpenseShare> findExpenseShareById(UUID expenseId);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM ExpenseShare es " +
             "WHERE es.expense.id = ?1 AND es.user.id = ?2")
-    void deleteByExpenseIdAndUserId(int expenseId, int payeeId);
+    void deleteByExpenseIdAndUserId(UUID expenseId, UUID payeeId);
 }
