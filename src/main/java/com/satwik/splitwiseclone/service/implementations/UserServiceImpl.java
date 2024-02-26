@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.swing.text.html.Option;
 import java.nio.file.AccessDeniedException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -58,12 +59,12 @@ public class UserServiceImpl implements UserService {
         // save the group
         groupRepository.save(group);
 
-        return userRepository.save(user).toString();
+        return user.getId().toString();
     }
 
 
     @Override
-    public UserDTO findUserById(int userId) throws Exception {
+    public UserDTO findUserById(UUID userId) throws Exception {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -78,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String deleteUser(int userId) throws Exception{
+    public String deleteUser(UUID userId) throws Exception{
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -89,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String updateUser(int userId, RegisterUserRequest request) throws Exception{
+    public String updateUser(UUID userId, RegisterUserRequest request) throws Exception{
 
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 

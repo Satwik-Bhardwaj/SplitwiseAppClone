@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/group")
@@ -25,7 +26,7 @@ public class GroupController {
     public ResponseEntity<String> createGroup(@RequestBody GroupDTO groupDTO) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(groupService.createGroup(groupDTO, userId));
@@ -36,10 +37,10 @@ public class GroupController {
 
     // delete a group in a user account
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteGroup(@RequestParam int groupId) {
+    public ResponseEntity<String> deleteGroup(@RequestParam UUID groupId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.ok(groupService.deleteGroupByGroupId(groupId, userId));
@@ -50,10 +51,10 @@ public class GroupController {
 
     // get a group in a user account
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupDTO> findGroup(@PathVariable int groupId) {
+    public ResponseEntity<GroupDTO> findGroup(@PathVariable UUID groupId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         GroupDTO groupDTO = null;
         try {
@@ -67,10 +68,10 @@ public class GroupController {
 
     // update a group in a user account
     @PutMapping("/update/{groupId}")
-    public ResponseEntity<String> updateGroup(@RequestBody GroupUpdateRequest groupUpdateRequest, @PathVariable int groupId) {
+    public ResponseEntity<String> updateGroup(@RequestBody GroupUpdateRequest groupUpdateRequest, @PathVariable UUID groupId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(groupUpdateRequest, groupId, userId));
@@ -84,7 +85,7 @@ public class GroupController {
     public ResponseEntity<GroupListDTO> findAllGroup() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        int userId = Integer.parseInt(authentication.getName());
+        UUID userId = UUID.fromString(authentication.getName());
 
         try {
             return ResponseEntity.status(HttpStatus.FOUND).body(groupService.findAllGroup(userId));

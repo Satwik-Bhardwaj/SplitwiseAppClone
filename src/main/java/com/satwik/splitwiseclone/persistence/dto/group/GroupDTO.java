@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class GroupDTO {
 
     @NotNull
     @NotBlank
-    private int groupId;
+    private UUID groupId;
 
     @NotNull
     private String groupName;

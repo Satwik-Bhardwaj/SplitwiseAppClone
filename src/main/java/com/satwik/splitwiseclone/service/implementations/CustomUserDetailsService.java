@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -18,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findById(Integer.valueOf(id));
+        Optional<User> user = userRepository.findById(UUID.fromString(id));
         // TODO : add user not found exception
         if(!user.isPresent()) throw new UsernameNotFoundException("User not found!");
 

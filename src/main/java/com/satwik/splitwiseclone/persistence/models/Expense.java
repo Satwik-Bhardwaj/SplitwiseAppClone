@@ -8,20 +8,15 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "expense")
-public class Expense {
-
-    @Id
-    @Column(name = "expense_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class Expense extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payer_id")
-    private User user;
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     @Column(name = "amount")
     private double amount;
@@ -29,10 +24,7 @@ public class Expense {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "date")
-    private String date;
-
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseShare> expenseShareList;
 
 }
