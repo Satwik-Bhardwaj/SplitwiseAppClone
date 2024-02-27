@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.service.implementations;
 
+import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import com.satwik.splitwiseclone.persistence.dto.expense.*;
 import com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO;
 import com.satwik.splitwiseclone.persistence.models.*;
@@ -29,6 +30,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Autowired
     ExpenseShareRepository expenseShareRepository;
 
+    @Autowired
+    private LoggedInUser loggedInUser;
+
     @Override
     @Transactional
     public String createGroupedExpense(UUID userId, UUID groupId, ExpenseDTO expenseDTO) {
@@ -37,7 +41,6 @@ public class ExpenseServiceImpl implements ExpenseService {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not fount"));
 
         if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
-
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
         expense.setDescription(expenseDTO.getDescription());
@@ -61,6 +64,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setOwner(user);
         expense = expenseRepository.save(expense);
 
+        // TODO: add owner itself for
         return expense.getId() + " - Expense successfully created in the default group!";
     }
 

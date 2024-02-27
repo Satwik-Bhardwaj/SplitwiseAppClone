@@ -1,25 +1,23 @@
 package com.satwik.splitwiseclone.persistence.dto.report;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportDTO {
+public class TempReport {
+
+    UUID expenseId;
 
     String groupName;
 
     String expenseName;
 
     String expenseOwner;
-
-    List<String> expenseContributors;
 
     double totalExpenseAmount;
 

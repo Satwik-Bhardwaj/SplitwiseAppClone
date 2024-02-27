@@ -15,16 +15,6 @@ public interface UserService {
 
     // TODO : create a specific response for the new user when stored
 
-//    // save & update
-//    String saveUser(RegisterUserRequest request);
-//
-//    // find by id
-//    UserDTO findUserById(int userId);
-//
-//
-//    // delete by id
-//    String deleteUser(int userId);
-
     // TODO : add more code for user security
 
 }

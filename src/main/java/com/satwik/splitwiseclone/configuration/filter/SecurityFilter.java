@@ -1,6 +1,7 @@
 package com.satwik.splitwiseclone.configuration.filter;
 
 import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
+import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
@@ -24,6 +26,9 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private LoggedInUser loggedInUser;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -38,6 +43,9 @@ public class SecurityFilter extends OncePerRequestFilter {
             // username should not be empty, cont-auth must be empty
             if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null)  {
                 // get the user details
+
+                loggedInUser.setUserId(UUID.fromString(userId));
+
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
                 // validate token

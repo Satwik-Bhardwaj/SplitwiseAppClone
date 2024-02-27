@@ -24,7 +24,7 @@ public class Expense extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseShare> expenseShareList;
 
 }
