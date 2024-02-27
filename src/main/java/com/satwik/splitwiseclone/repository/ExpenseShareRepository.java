@@ -28,6 +28,12 @@ public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, UUID
     @Query(value = "SELECT COUNT(*) FROM ExpenseShare es WHERE es.expense.id = ?1")
     int findCountOfPayee(UUID expenseId);
 
+    @Query("SELECT u.username " +
+            "FROM ExpenseShare es " +
+            "INNER JOIN es.user u " +
+            "WHERE es.expense.id = ?1")
+    List<String> findPayeesById(UUID expenseId);
+
     @Query(value = "SELECT es FROM ExpenseShare es WHERE es.expense.id = ?1")
     List<ExpenseShare> findExpenseShareById(UUID expenseId);
 

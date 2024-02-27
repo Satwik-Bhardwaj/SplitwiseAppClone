@@ -1,6 +1,7 @@
 package com.satwik.splitwiseclone.repository;
 
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
+import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
 import com.satwik.splitwiseclone.persistence.models.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,22 +20,23 @@ public interface GroupRepository extends JpaRepository<Group, UUID> {
 
 
 
-//    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.report.ReportDTO(u.username, es.sharedAmount) " +
-//            "FROM ExpenseShare es " +
-//            "INNER JOIN es.user u " +
-//            "WHERE es.expense.id = ?1")
+//    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.report.ReportDTO(g.groupName, " +
+//            "e.description, " +
+//            "o.username, " +
+//            "e.amount) " +
+//            "FROM Group g " +
+//            "INNER JOIN g.expenseList e " +
+//            "INNER JOIN e.owner o " +
+//            "WHERE g.id = ?1")
 
-    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.report.ReportDTO(g.groupName," +
-            "e.description AS expenseName, " +
-            "u.username AS expenseOwner, " +
-            "us.username AS expenseContributor, " +
-            "SUM(es.sharedAmount) AS totalAmount " +
-            "FROM Group g " +
-            "JOIN g.expenseList e " +
-            "JOIN e.owner u " +
-            "JOIN e.expenseShareList es " +
-            "JOIN es.user us " +
-            "WHERE g.id = ?1 " +
-            "GROUP BY g.groupName, e.description, u.username, us.username")
-    List<ReportDTO> generateReportById(UUID groupId);
+    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.report.TempReport("+
+            "e.id, " +
+            "g.groupName, " +
+            "e.description, " +
+            "e.owner.username, " +
+            "e.amount) " +
+            "FROM Expense e " +
+            "JOIN e.group g " +
+            "WHERE g.id = ?1 ")
+    List<TempReport> generateReportById(UUID groupId);
 }
