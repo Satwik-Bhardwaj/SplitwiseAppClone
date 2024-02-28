@@ -20,4 +20,9 @@ public class UserDTO {
     @NotNull
     PhoneDTO phone;
 
+    UserDTO(String username, String email, String countryCode, Long phoneNumber) {
+        this.username = username;
+        this.email = email;
+        this.phone = new PhoneDTO(countryCode, phoneNumber);
+    }
 }

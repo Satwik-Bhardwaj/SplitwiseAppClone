@@ -1,6 +1,7 @@
 package com.satwik.splitwiseclone.persistence.dto.group;
 
 import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseListDTO;
+import com.satwik.splitwiseclone.persistence.models.GroupMembers;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -25,5 +26,7 @@ public class GroupDTO {
     private String owner;
 
     private List<ExpenseListDTO> expenses;
+
+    private List<GroupMemberDTO> groupMembers;
 
 }
