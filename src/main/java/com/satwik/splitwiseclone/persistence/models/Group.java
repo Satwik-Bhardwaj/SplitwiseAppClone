@@ -3,6 +3,8 @@ package com.satwik.splitwiseclone.persistence.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,9 +26,7 @@ public class Group extends BaseEntity {
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenseList;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "group_members", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
-    private Set<User> members;
+    @OneToMany(mappedBy = "group", orphanRemoval = true)
+    private List<GroupMembers> groupMembers = new ArrayList<>();
 
-    // TODO : add group members
 }

@@ -3,6 +3,7 @@ package com.satwik.splitwiseclone.controller;
 import com.satwik.splitwiseclone.persistence.dto.group.GroupDTO;
 import com.satwik.splitwiseclone.persistence.dto.group.GroupListDTO;
 import com.satwik.splitwiseclone.persistence.dto.group.GroupUpdateRequest;
+import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -56,7 +58,7 @@ public class GroupController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UUID userId = UUID.fromString(authentication.getName());
 
-        GroupDTO groupDTO = null;
+        GroupDTO groupDTO;
         try {
             groupDTO = groupService.findGroupByGroupId(groupId, userId);
         } catch (AccessDeniedException e) {
@@ -94,4 +96,30 @@ public class GroupController {
         }
     }
 
+    // add members to the group
+    @PostMapping("/add-member/{groupId}")
+    public ResponseEntity<String> addGroupMembers(@PathVariable UUID groupId, @RequestParam UUID memberId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = UUID.fromString(authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.addGroupMembers(groupId, memberId));
+
+    }
+
+    // get all the members of the group
+    @GetMapping("/{groupId}/members")
+    public ResponseEntity<List<UserDTO>> findMembers(@PathVariable UUID groupId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UUID userId = UUID.fromString(authentication.getName());
+
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.findMembers(groupId));
+
+    }
+
+    // remove all the members of the group
+    @DeleteMapping("/remove-member/{groupMemberId}")
+    public ResponseEntity<String> deleteMembers(@PathVariable UUID groupMemberId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.deleteMembers(groupMemberId));
+    }
 }
