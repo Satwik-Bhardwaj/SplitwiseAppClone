@@ -2,6 +2,7 @@ package com.satwik.splitwiseclone.configuration.filter;
 
 import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
 import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
+import com.satwik.splitwiseclone.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,9 @@ import java.util.UUID;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
@@ -39,19 +43,18 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(token != null) {
             // get the user id using the token
             String userId = jwtUtil.getUserId(token);
-
             // username should not be empty, cont-auth must be empty
             if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null)  {
+
                 // get the user details
-
-                loggedInUser.setUserId(UUID.fromString(userId));
-
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
                 // validate token
                 boolean isValid = jwtUtil.validateToken(token, userDetails.getUsername());
 
                 if(isValid) {
+                    loggedInUser.setUserId(UUID.fromString(userId));
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, userDetails.getPassword(), userDetails.getAuthorities());
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
