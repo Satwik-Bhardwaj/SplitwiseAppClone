@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.configuration.security;
 
+import com.satwik.splitwiseclone.persistence.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

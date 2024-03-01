@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.controller;
 
+import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
@@ -29,11 +30,8 @@ public class UserController {
     }
 
     // get the user
-    @GetMapping("")
-    public ResponseEntity<UserDTO> getUser() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
+    @GetMapping("{userId}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable UUID userId) {
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(userId));
@@ -44,10 +42,7 @@ public class UserController {
 
     // update the user details
     @PutMapping("update")
-    public ResponseEntity<String> updateUser(@Valid @RequestBody RegisterUserRequest updateUserRequest) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
+    public ResponseEntity<String> updateUser(@PathVariable UUID userId, @Valid @RequestBody RegisterUserRequest updateUserRequest) {
 
         try {
             return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userId, updateUserRequest));
@@ -58,12 +53,8 @@ public class UserController {
     }
 
     // delete the user
-    @DeleteMapping("delete")
-    public ResponseEntity<String> deleteUser() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
+    @DeleteMapping("delete/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable UUID userId) {
         try {
             return ResponseEntity.ok(userService.deleteUser(userId));
         } catch (Exception e) {
