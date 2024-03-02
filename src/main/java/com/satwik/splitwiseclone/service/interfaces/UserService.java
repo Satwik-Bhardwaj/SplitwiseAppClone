@@ -13,8 +13,4 @@ public interface UserService {
 
     String updateUser(UUID userId, RegisterUserRequest registerUserRequest) throws Exception;
 
-    // TODO : create a specific response for the new user when stored
-
-    // TODO : add more code for user security
-
 }

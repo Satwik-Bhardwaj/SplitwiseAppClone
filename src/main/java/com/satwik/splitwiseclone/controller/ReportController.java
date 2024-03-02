@@ -1,7 +1,6 @@
 package com.satwik.splitwiseclone.controller;
 
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
-import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
 import com.satwik.splitwiseclone.service.interfaces.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,9 +28,13 @@ public class ReportController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UUID userId = UUID.fromString(authentication.getName());
 
-            return ResponseEntity.status(HttpStatus.OK).body(reportService.generateReport(groupId, userId));
+            try {
+                return ResponseEntity.status(HttpStatus.OK).body(reportService.generateReport(groupId, userId));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
 
-        } catch (AccessDeniedException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

@@ -2,10 +2,8 @@ package com.satwik.splitwiseclone.service.implementations;
 
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
 import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
-import com.satwik.splitwiseclone.persistence.models.Expense;
 import com.satwik.splitwiseclone.persistence.models.Group;
 import com.satwik.splitwiseclone.persistence.models.User;
-import com.satwik.splitwiseclone.repository.ExpenseRepository;
 import com.satwik.splitwiseclone.repository.ExpenseShareRepository;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -30,27 +27,27 @@ import java.util.UUID;
 public class ReportServiceImpl implements ReportService {
 
     @Autowired
-    GroupRepository groupRepository;
+    private AuthorizationService authorizationService;
 
     @Autowired
-    UserRepository userRepository;
+    private GroupRepository groupRepository;
 
     @Autowired
-    ExpenseShareRepository expenseShareRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ExpenseShareRepository expenseShareRepository;
 
     @Value("${my.reportFilePath}")
     private String REPORT_FILE_PATH;
 
     @Override
-    public List<ReportDTO> generateReport(UUID groupId, UUID userId) throws AccessDeniedException {
+    public List<ReportDTO> generateReport(UUID groupId, UUID userId) throws Exception {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
-
-        if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
+        Group group = authorizationService.checkAuthorizationOnGroup(groupId);
 
         // preparing report
-        List<TempReport> tempReportList = groupRepository.generateReportById(groupId);
+        List<TempReport> tempReportList = groupRepository.generateReportById(group.getId());
         List<ReportDTO> reportDTOS = new ArrayList<>();
 
         for (TempReport tempReport : tempReportList) {
@@ -117,8 +114,6 @@ public class ReportServiceImpl implements ReportService {
                 csvData.append(reportDTO.getTotalExpenseAmount()).append("\n");
             }
             fos.write(csvData.toString().getBytes());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -165,8 +160,6 @@ public class ReportServiceImpl implements ReportService {
             }
             workbook.write(outputStream);
             workbook.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

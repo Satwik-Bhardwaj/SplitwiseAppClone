@@ -1,16 +1,15 @@
 package com.satwik.splitwiseclone.persistence.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NonNull;
-import org.antlr.v4.runtime.misc.NotNull;
+import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "user")
 public class User extends BaseEntity {

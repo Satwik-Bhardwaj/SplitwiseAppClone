@@ -1,10 +1,12 @@
 package com.satwik.splitwiseclone.persistence.models;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "expense_share")
 public class ExpenseShare extends BaseEntity {

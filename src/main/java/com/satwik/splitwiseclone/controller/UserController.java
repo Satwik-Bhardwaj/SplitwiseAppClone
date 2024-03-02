@@ -1,6 +1,5 @@
 package com.satwik.splitwiseclone.controller;
 
-import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
@@ -8,8 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;

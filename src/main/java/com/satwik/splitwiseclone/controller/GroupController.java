@@ -8,11 +8,8 @@ import com.satwik.splitwiseclone.service.interfaces.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,12 +24,9 @@ public class GroupController {
     @PostMapping("/create")
     public ResponseEntity<String> createGroup(@RequestBody GroupDTO groupDTO) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(groupService.createGroup(groupDTO, userId));
-        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(groupService.createGroup(groupDTO));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -41,12 +35,9 @@ public class GroupController {
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteGroup(@RequestParam UUID groupId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
         try {
-            return ResponseEntity.ok(groupService.deleteGroupByGroupId(groupId, userId));
-        } catch (AccessDeniedException e) {
+            return ResponseEntity.ok(groupService.deleteGroupByGroupId(groupId));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -55,13 +46,10 @@ public class GroupController {
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupDTO> findGroup(@PathVariable UUID groupId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
         GroupDTO groupDTO;
         try {
-            groupDTO = groupService.findGroupByGroupId(groupId, userId);
-        } catch (AccessDeniedException e) {
+            groupDTO = groupService.findGroupByGroupId(groupId);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -72,12 +60,9 @@ public class GroupController {
     @PutMapping("/update/{groupId}")
     public ResponseEntity<String> updateGroup(@RequestBody GroupUpdateRequest groupUpdateRequest, @PathVariable UUID groupId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(groupUpdateRequest, groupId, userId));
-        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(groupService.updateGroup(groupUpdateRequest, groupId));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -86,12 +71,9 @@ public class GroupController {
     @GetMapping("/user")
     public ResponseEntity<GroupListDTO> findAllGroup() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
-
         try {
-            return ResponseEntity.status(HttpStatus.FOUND).body(groupService.findAllGroup(userId));
-        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FOUND).body(groupService.findAllGroup());
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -99,27 +81,33 @@ public class GroupController {
     // add members to the group
     @PostMapping("/add-member/{groupId}")
     public ResponseEntity<String> addGroupMembers(@PathVariable UUID groupId, @RequestParam UUID memberId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
 
-        return ResponseEntity.status(HttpStatus.OK).body(groupService.addGroupMembers(groupId, memberId));
-
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(groupService.addGroupMembers(groupId, memberId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // get all the members of the group
     @GetMapping("/{groupId}/members")
     public ResponseEntity<List<UserDTO>> findMembers(@PathVariable UUID groupId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UUID userId = UUID.fromString(authentication.getName());
 
-        return ResponseEntity.status(HttpStatus.OK).body(groupService.findMembers(groupId));
-
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(groupService.findMembers(groupId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // remove all the members of the group
     @DeleteMapping("/remove-member/{groupMemberId}")
-    public ResponseEntity<String> deleteMembers(@PathVariable UUID groupMemberId) {
+    public ResponseEntity<String> deleteMembers(@PathVariable UUID groupMemberId, @RequestParam UUID groupId) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(groupService.deleteMembers(groupMemberId));
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(groupService.deleteMembers(groupId, groupMemberId));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
