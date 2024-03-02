@@ -14,31 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private AuthorizationService authorizationService;
 
     @Autowired
-    GroupRepository groupRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private LoggedInUser loggedInUser;
+    private GroupRepository groupRepository;
 
     @Autowired
     private BCryptPasswordEncoder pwdEncoder;
-
-    User checkUser(UUID userId) throws AccessDeniedException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        User loggedUser = userRepository.findById(loggedInUser.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        if (loggedUser.getId() != user.getId()) throw  new AccessDeniedException("Access Denied");
-
-        return user;
-    }
 
     // for save and update
     @Override
@@ -65,7 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserById(UUID userId) throws Exception {
 
-        User user = checkUser(userId);
+        User user = authorizationService.checkAuthorizationOnUser(userId);
 
         return new UserDTO(
                 user.getUsername(),
@@ -76,9 +67,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String deleteUser(UUID userId) throws Exception{
+    public String deleteUser(UUID userId) throws Exception {
 
-        User user = checkUser(userId);
+        User user = authorizationService.checkAuthorizationOnUser(userId);
         userRepository.deleteById(user.getId());
 
         return "%s - user deleted.".formatted(userId);
@@ -88,7 +79,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public String updateUser(UUID userId, RegisterUserRequest request) throws Exception{
 
-        User user = checkUser(userId);
+        User user = authorizationService.checkAuthorizationOnUser(userId);
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setCountryCode(request.getPhone().getCountryCode());

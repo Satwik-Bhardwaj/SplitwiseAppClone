@@ -5,24 +5,23 @@ import com.satwik.splitwiseclone.persistence.dto.group.GroupListDTO;
 import com.satwik.splitwiseclone.persistence.dto.group.GroupUpdateRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
 public interface GroupService {
-    String createGroup(GroupDTO groupDTO, UUID userId) throws AccessDeniedException;
+    String createGroup(GroupDTO groupDTO) throws Exception;
 
-    String deleteGroupByGroupId(UUID groupId, UUID userId) throws AccessDeniedException;
+    String deleteGroupByGroupId(UUID groupId) throws Exception;
 
-    GroupDTO findGroupByGroupId(UUID groupId, UUID userId) throws AccessDeniedException;
+    GroupDTO findGroupByGroupId(UUID groupId) throws Exception;
 
-    String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId, UUID userId) throws AccessDeniedException;
+    String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId) throws Exception;
 
-    GroupListDTO findAllGroup(UUID userId) throws AccessDeniedException;
+    GroupListDTO findAllGroup() throws Exception;
 
-    String addGroupMembers(UUID groupId, UUID memberId);
+    String addGroupMembers(UUID groupId, UUID memberId) throws Exception;
 
-    List<UserDTO> findMembers(UUID groupId);
+    List<UserDTO> findMembers(UUID groupId) throws Exception;
 
-    String deleteMembers(UUID groupMemberId);
+    String deleteMembers(UUID groupId, UUID groupMemberId) throws Exception;
 }

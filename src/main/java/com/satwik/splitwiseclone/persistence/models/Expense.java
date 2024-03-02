@@ -1,11 +1,14 @@
 package com.satwik.splitwiseclone.persistence.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "expense")
 public class Expense extends BaseEntity {
