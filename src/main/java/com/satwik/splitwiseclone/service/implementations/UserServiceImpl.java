@@ -1,6 +1,5 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import com.satwik.splitwiseclone.persistence.dto.user.PhoneDTO;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
