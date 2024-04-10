@@ -1,8 +1,10 @@
 package com.satwik.splitwiseclone.controller;
 
 import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
+import com.satwik.splitwiseclone.persistence.dto.user.AuthenticationResponse;
 import com.satwik.splitwiseclone.persistence.dto.user.LoginRequest;
-import com.satwik.splitwiseclone.persistence.dto.user.LoginResponse;
+import com.satwik.splitwiseclone.persistence.dto.user.RefreshTokenRequest;
+import com.satwik.splitwiseclone.service.interfaces.RefreshTokenService;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +27,25 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private RefreshTokenService refreshTokenService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
             loginRequest.getUserId(), loginRequest.getPassword()
         ));
         String userId = authentication.getName();
-        String token = jwtUtil.generateToken(userId);
+        String token = jwtUtil.generateAccessToken(userId);
+        String refreshToken = jwtUtil.generateRefreshToken(userId);
 
-        return ResponseEntity.ok(new LoginResponse(token, "Successfully generated token!"));
+        return ResponseEntity.ok(new AuthenticationResponse(token, refreshToken, "Successfully generated token!"));
     }
 
+    @PostMapping("/refresh_token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(refreshTokenService.issueNewToken(refreshTokenRequest));
+    }
 }
