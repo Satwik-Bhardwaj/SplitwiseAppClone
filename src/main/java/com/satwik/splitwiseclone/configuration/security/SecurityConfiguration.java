@@ -39,6 +39,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(
                 configurer -> configurer
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh_token").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/user/register").permitAll()
                         .anyRequest().authenticated()
         );
