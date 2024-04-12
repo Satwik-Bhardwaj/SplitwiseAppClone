@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh_token").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/user/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/oauth2/**").permitAll()
                         .anyRequest().authenticated()
         );
         http.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
@@ -49,7 +50,9 @@ public class SecurityConfiguration {
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
-        http.httpBasic(Customizer.withDefaults());
+        //http.httpBasic(Customizer.withDefaults());
+
+//        http.oauth2Login(Customizer.withDefaults());
 
         http.csrf(AbstractHttpConfigurer::disable);
 
