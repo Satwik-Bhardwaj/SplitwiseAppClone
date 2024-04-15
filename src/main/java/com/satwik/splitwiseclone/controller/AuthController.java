@@ -45,4 +45,14 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         return ResponseEntity.ok(refreshTokenService.issueNewToken(refreshTokenRequest));
     }
+
+    @GetMapping("/getUser")
+    public String getUser() {
+        return "Get the user";
+    }
+
+    @GetMapping("/locked")
+    public String locked() {
+        return "It is locked";
+    }
 }
