@@ -21,39 +21,12 @@ public class OAuthController {
         return "index";
     }
 
-    @PostMapping("/callback")
+    @GetMapping("/callback")
     public ResponseEntity<String> handleCallback(@RequestParam("code") String code) {
         Map<String, Object> postData = new HashMap<>();
         postData.put("code", code);
-//        postData.put("client_id", clientId);
-//        postData.put("client_secret", clientSecret);
-//        postData.put("redirect_uri", callbackUrl);
         postData.put("grant_type", "authorization_code");
 
-        // Convert Map to JSON string
-        ObjectMapper objectMapper = new ObjectMapper();
-        String requestBody;
-        try {
-            requestBody = objectMapper.writeValueAsString(postData);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-        // Create headers
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // Create an HttpEntity object containing the request body and headers
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
-
-        // Create an instance of RestTemplate
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Send the POST request and get the response
-        ResponseEntity<String> response = null; // restTemplate.exchange(authUrl, HttpMethod.POST, requestEntity, String.class);
-
-        // Print the response
-        System.out.println("Response: " + response);
-        return response;
+        return ResponseEntity.ok(postData.toString());
     }
 }
