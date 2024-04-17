@@ -68,13 +68,8 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
         ).addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
 
-//        http.formLogin(formLogin -> formLogin.loginPage("/api/v1/oauth2/google/login").permitAll());
-
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-
-        //http.httpBasic(Customizer.withDefaults());
 
         http.oauth2Login(Customizer.withDefaults());
 

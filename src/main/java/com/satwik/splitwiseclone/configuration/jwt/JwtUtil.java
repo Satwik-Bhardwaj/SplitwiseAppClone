@@ -115,4 +115,16 @@ public class JwtUtil {
         String userId = claims.getSubject();
         return generateAccessToken(userId);
     }
+
+    public Claims getClaimsOfOAuth2Token(String tokenId, String clientSecret) {
+        try {
+            return getClaims(tokenId, clientSecret);
+        }catch (ExpiredJwtException expiredJwtException) {
+            log.error("OAuth2 token expired! User have to log in again");
+            throw new RuntimeException("OAuth2 token is expired! Please log in again...");
+        }catch (SignatureException signatureException) {
+            log.error("invalid signature of OAuth2 token");
+            throw new RuntimeException("OAuth2 token has invalid signature!");
+        }
+    }
 }
