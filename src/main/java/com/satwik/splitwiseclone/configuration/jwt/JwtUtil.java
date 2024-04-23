@@ -34,6 +34,8 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userId)
                 .setIssuedAt(issuedAt)
+                .setIssuer("app.splitwise.clone.com")
+                .claim("email", "")
                 .setExpiration(new Date((ACCESS_TOKEN_EXP_TIME * 60 * 1000) + issuedAt.getTime()))
                 .signWith(SignatureAlgorithm.HS512, ACCESS_SECRET_KEY)
                 .compact();
@@ -114,17 +116,5 @@ public class JwtUtil {
 
         String userId = claims.getSubject();
         return generateAccessToken(userId);
-    }
-
-    public Claims getClaimsOfOAuth2Token(String tokenId, String clientSecret) {
-        try {
-            return getClaims(tokenId, clientSecret);
-        }catch (ExpiredJwtException expiredJwtException) {
-            log.error("OAuth2 token expired! User have to log in again");
-            throw new RuntimeException("OAuth2 token is expired! Please log in again...");
-        }catch (SignatureException signatureException) {
-            log.error("invalid signature of OAuth2 token");
-            throw new RuntimeException("OAuth2 token has invalid signature!");
-        }
     }
 }

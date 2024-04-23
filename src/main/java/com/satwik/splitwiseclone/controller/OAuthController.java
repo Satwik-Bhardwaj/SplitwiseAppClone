@@ -10,6 +10,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
+import com.satwik.splitwiseclone.persistence.dto.user.AuthenticationResponse;
+import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.repository.UserRepository;
+import com.satwik.splitwiseclone.service.interfaces.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +29,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/oauth2")
@@ -44,6 +50,12 @@ public class OAuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserService userService;
+
     @GetMapping("/login")
     public String oauth2Login() {
 
@@ -51,7 +63,7 @@ public class OAuthController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<String> handleCallback(@RequestParam("code") String code, @RequestParam("state") String state) {
+    public ResponseEntity<AuthenticationResponse> handleCallback(@RequestParam("code") String code, @RequestParam("state") String state) {
         // TODO : Match state
 
         Map<String, Object> postData = new HashMap<>();
@@ -109,30 +121,38 @@ public class OAuthController {
         } catch (GeneralSecurityException | IOException e) {
             throw new RuntimeException(e);
         }
-        if (idToken != null) {
-            GoogleIdToken.Payload payload = idToken.getPayload();
 
-            // Print user identifier
-            String userId = payload.getSubject();
-            System.out.println("User ID: " + userId);
+        assert idToken != null;
+        GoogleIdToken.Payload payload = idToken.getPayload();
 
-            // Get profile information from payload
-            String email = payload.getEmail();
-            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-            String name = (String) payload.get("name");
-            String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
-            String familyName = (String) payload.get("family_name");
-            String givenName = (String) payload.get("given_name");
+        String userId = payload.getSubject();
+        System.out.println("User ID: " + userId);
 
-            // Use or store profile information
-            // ...
+        // Get profile information from payload
+        String email = payload.getEmail();
+        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
 
-        } else {
-            System.out.println("Invalid ID token.");
+        // check if user already exists (using email)
+        // TODO : use more details from token to check the user exists
+        Optional<User> user = userRepository.findByEmail(email);
+        if(!user.isPresent()) {
+            User newUser = new User();
+            RegisterUserRequest registerUserRequest = new RegisterUserRequest();
+            registerUserRequest.setEmail(email);
+            registerUserRequest.setPassword("");
+            registerUserRequest.setUsername();
+            userService.saveUser(registerUserRequest);
         }
-        Claims userClaims = jwtUtil.getClaimsOfOAuth2Token(id_token, CLIENT_SECRET);
-        String user = userClaims.getSubject();
-        return ResponseEntity.ok(user);
+
+        // issue new token and refresh token
+        String token = jwtUtil.generateAccessToken(userId);
+        String refreshToken = jwtUtil.generateRefreshToken(userId);
+
+        return ResponseEntity.ok(new AuthenticationResponse(token, refreshToken, "New token issue for google user."));
     }
 }
