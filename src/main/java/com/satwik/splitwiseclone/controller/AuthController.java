@@ -5,7 +5,7 @@ import com.satwik.splitwiseclone.persistence.dto.user.AuthenticationResponse;
 import com.satwik.splitwiseclone.persistence.dto.user.LoginRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.RefreshTokenRequest;
 import com.satwik.splitwiseclone.service.interfaces.RefreshTokenService;
-import com.satwik.splitwiseclone.service.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,12 +13,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -31,9 +29,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-            loginRequest.getUserId(), loginRequest.getPassword()
-        ));
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequest.getUserId(), loginRequest.getPassword()
+            ));
+        } catch (Exception e) {
+            log.info("Login Authentication Exception : {}", String.valueOf(e));
+        }
+
         String userId = authentication.getName();
         String token = jwtUtil.generateAccessToken(userId);
         String refreshToken = jwtUtil.generateRefreshToken(userId);
@@ -46,6 +50,7 @@ public class AuthController {
         return ResponseEntity.ok(refreshTokenService.issueNewToken(refreshTokenRequest));
     }
 
+    // TODO : remove the following controller
     @GetMapping("/getUser")
     public String getUser() {
         return "Get the user";
