@@ -1,6 +1,7 @@
 package com.satwik.splitwiseclone.service.implementations;
 
 import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
+import com.satwik.splitwiseclone.constants.enums.RegistrationMethod;
 import com.satwik.splitwiseclone.persistence.dto.user.PhoneDTO;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
         user.setCountryCode(request.getPhone().getCountryCode());
         user.setPhoneNumber(request.getPhone().getPhoneNumber());
         user.setPassword(pwdEncoder.encode(request.getPassword()));
+        user.setRegistrationMethod(RegistrationMethod.NORMAL);
         user = userRepository.save(user);
 
         Group group = new Group();

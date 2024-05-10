@@ -10,9 +10,12 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
+import com.satwik.splitwiseclone.constants.enums.RegistrationMethod;
 import com.satwik.splitwiseclone.persistence.dto.user.AuthenticationResponse;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
+import com.satwik.splitwiseclone.persistence.models.Group;
 import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
 import io.jsonwebtoken.Claims;
@@ -26,11 +29,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/oauth2")
 public class OAuthController {
@@ -52,6 +53,9 @@ public class OAuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    GroupRepository groupRepository;
 
     @Autowired
     UserService userService;
@@ -142,17 +146,28 @@ public class OAuthController {
         Optional<User> user = userRepository.findByEmail(email);
         if(!user.isPresent()) {
             User newUser = new User();
-            RegisterUserRequest registerUserRequest = new RegisterUserRequest();
-            registerUserRequest.setEmail(email);
-            registerUserRequest.setPassword("");
-            registerUserRequest.setUsername();
-            userService.saveUser(registerUserRequest);
+            newUser.setUsername(UUID.randomUUID().toString());
+            newUser.setEmail(email);
+//            newUser.setCountryCode(request.getPhone().getCountryCode());
+//            newUser.setPhoneNumber(request.getPhone().getPhoneNumber());
+            newUser.setRegistrationMethod(RegistrationMethod.GOOGLE);
+            newUser = userRepository.save(newUser);
+
+            Group group = new Group();
+            group.setGroupName("Non Grouped Expenses");
+            group.setUser(newUser);
+            group.setDefaultGroup(true);
+            groupRepository.save(group);
+
+            String token = jwtUtil.generateAccessToken(newUser.getId().toString());
+            String refreshToken = jwtUtil.generateRefreshToken(newUser.getId().toString());
+
+            return ResponseEntity.ok(new AuthenticationResponse(token, refreshToken, "New token issue for google user."));
+        } else {
+            String token = jwtUtil.generateAccessToken(user.get().getId().toString());
+            String refreshToken = jwtUtil.generateRefreshToken(user.get().getId().toString());
+
+            return ResponseEntity.ok(new AuthenticationResponse(token, refreshToken, "New token issue for google user."));
         }
-
-        // issue new token and refresh token
-        String token = jwtUtil.generateAccessToken(userId);
-        String refreshToken = jwtUtil.generateRefreshToken(userId);
-
-        return ResponseEntity.ok(new AuthenticationResponse(token, refreshToken, "New token issue for google user."));
     }
 }

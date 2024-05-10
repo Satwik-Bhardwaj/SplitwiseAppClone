@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.persistence.models;
 
+import com.satwik.splitwiseclone.constants.enums.RegistrationMethod;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,11 +24,15 @@ public class User extends BaseEntity {
     @Column(name = "phone_country_code")
     private String countryCode;
 
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number")
     private long phoneNumber;
 
     @Column(name = "password")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "registrationMethod")
+    private RegistrationMethod registrationMethod;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenseList;
