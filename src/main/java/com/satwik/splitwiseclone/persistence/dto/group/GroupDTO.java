@@ -16,11 +16,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class GroupDTO {
 
-    @NotNull
-    @NotBlank
     private UUID groupId;
 
-    @NotNull
+    @NotBlank(message = "Set a valid group name")
     private String groupName;
 
     private String owner;

@@ -45,6 +45,7 @@ public class SecurityConfiguration {
     @Autowired
     protected BCryptPasswordEncoder passwordEncoder;
 
+
     @Autowired
     private SecurityFilter securityFilter;
 

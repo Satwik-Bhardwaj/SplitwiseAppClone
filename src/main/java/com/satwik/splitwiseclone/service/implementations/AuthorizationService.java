@@ -22,35 +22,8 @@ public class AuthorizationService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    GroupRepository groupRepository;
-
-    @Autowired
-    ExpenseRepository expenseRepository;
 
     public User getAuthorizedUser() {
-        return userRepository.findById(loggedInUser.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepository.findByEmail(loggedInUser.getUserEmail()).orElseThrow(() -> new RuntimeException("User not found"));
     }
-
-    public User checkAuthorizationOnUser(UUID userId) throws AccessDeniedException {
-        User loggedUser = userRepository.findById(loggedInUser.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        if (loggedUser.getId() != user.getId()) throw  new AccessDeniedException("Access Denied");
-        return user;
-    }
-
-    public Group checkAuthorizationOnGroup(UUID groupId) throws AccessDeniedException {
-        User loggedUser = userRepository.findById(loggedInUser.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
-        if (loggedUser.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
-        return group;
-    }
-
-    public Expense checkAuthorizationOnExpense(UUID expenseId) throws AccessDeniedException {
-        User loggedUser = userRepository.findById(loggedInUser.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Group not found!"));
-        if (loggedUser.getId() != expense.getOwner().getId()) throw new AccessDeniedException("Access Denied");
-        return expense;
-    }
-
 }

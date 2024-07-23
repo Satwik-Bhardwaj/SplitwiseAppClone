@@ -13,17 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 public class ExpenseDTO {
 
-    @NotNull
-    @NotBlank
     private String payerName;
 
     @NotNull
     private double amount;
 
+    @NotNull
     private String description;
 
-    @NotNull
-    @NotBlank
     private String date;
 
     private List<PayeeDTO> payees;

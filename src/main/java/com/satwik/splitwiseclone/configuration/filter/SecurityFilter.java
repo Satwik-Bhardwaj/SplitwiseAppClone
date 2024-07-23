@@ -53,34 +53,35 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        // Check if the request URI is whitelisted
 
+        // Check if the request URI is whitelisted
         if (isWhitelisted(requestURI)) {
-            log.info("Unsecured url: {}", requestURI);
             filterChain.doFilter(request, response);
             return;
         }
-        log.info("Secured url: {}", requestURI);
 
         // read the token from the header
         String token = request.getHeader("Authorization");
 
         if(token != null) {
-            // get the user id using the token
-            String userId = jwtUtil.getUserId(token);
+            token = token.substring(7);
+
+            // get the user email using the token
+            String userEmail = jwtUtil.getUserEmail(token);
+
             // username should not be empty, cont-auth must be empty
-            if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null)  {
+            if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null)  {
 
                 // get the user details
-                UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
                 // validate token
                 boolean isValid = jwtUtil.validateToken(token, userDetails.getUsername());
 
                 if(isValid) {
-                    loggedInUser.setUserId(UUID.fromString(userId));
+                    loggedInUser.setUserEmail(userEmail);
 
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userId, userDetails.getPassword(), userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userEmail, userDetails.getPassword(), userDetails.getAuthorities());
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
