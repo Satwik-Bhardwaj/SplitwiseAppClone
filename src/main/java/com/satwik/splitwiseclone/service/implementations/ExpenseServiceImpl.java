@@ -35,18 +35,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public String createGroupedExpense(UUID groupId, ExpenseDTO expenseDTO) throws Exception {
+    public String createGroupedExpense(UUID groupId, ExpenseDTO expenseDTO) {
 
         User user = authorizationService.getAuthorizedUser();
-        Group group = authorizationService.checkAuthorizationOnGroup(groupId);
-
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
         expense.setDescription(expenseDTO.getDescription());
         expense.setGroup(group);
         expense.setOwner(user);
         expenseRepository.save(expense);
-
         return "Expense successfully created!";
     }
 
@@ -59,7 +57,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
-        expense.setDescription(expenseDTO.getDescription());expense.setGroup(group);
+        expense.setDescription(expenseDTO.getDescription());
+        expense.setGroup(group);
         expense.setOwner(user);
         expense = expenseRepository.save(expense);
 
@@ -69,97 +68,67 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public String deleteExpenseById(UUID expenseId) throws AccessDeniedException {
-
-        authorizationService.checkAuthorizationOnExpense(expenseId);
+    public String deleteExpenseById(UUID expenseId) {
         expenseRepository.deleteById(expenseId);
-
         return "Expense is deleted successfully!";
-
     }
 
     @Override
     @Transactional
-    public String addUserToExpense(UUID expenseId, UUID payeeId) throws AccessDeniedException {
+    public String addUserToExpense(UUID expenseId, UUID payeeId) {
 
-        Expense expense = authorizationService.checkAuthorizationOnExpense(expenseId);
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
         User payee = userRepository.findById(payeeId).orElseThrow(() -> new RuntimeException("Payee not found"));
-
         ExpenseShare expenseShare = new ExpenseShare();
         expenseShare.setExpense(expense);
         expenseShare.setUser(payee);
-
         double sharedAmount = expense.getAmount() /
                 (expenseShareRepository.findCountOfPayee(expenseId) + 1);
-
         expenseShare.setSharedAmount(sharedAmount);
-
         List<ExpenseShare> shareList = expenseShareRepository.findExpenseShareById(expenseId);
-
         for (ExpenseShare share : shareList) {
             share.setSharedAmount(sharedAmount);
             expenseShareRepository.save(share);
         }
-
         expenseShareRepository.save(expenseShare);
-
         return "Success! Payee is added to the expense.";
     }
 
     @Override
     @Transactional
-    public String removeUserFromExpense(UUID expenseId, UUID payeeId) throws AccessDeniedException {
-
-        authorizationService.checkAuthorizationOnExpense(expenseId);
-
+    public String removeUserFromExpense(UUID expenseId, UUID payeeId) {
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
         User payee = userRepository.findById(payeeId).orElseThrow(() -> new RuntimeException("Payee not found"));
-
         expenseShareRepository.deleteByExpenseIdAndUserId(expense.getId(), payee.getId());
-
         double sharedAmount = expense.getAmount() / (expenseShareRepository.findCountOfPayee(expense.getId()));
         List<ExpenseShare> shareList = expenseShareRepository.findExpenseShareById(expense.getId());
-
         for (ExpenseShare share : shareList) {
             share.setSharedAmount(sharedAmount);
             expenseShareRepository.save(share);
         }
-
         return "Success! Payee is removed from the expense";
     }
 
     @Override
-    public ExpenseDTO findExpenseById(UUID expenseId) throws AccessDeniedException {
-
-        authorizationService.checkAuthorizationOnExpense(expenseId);
-
+    public ExpenseDTO findExpenseById(UUID expenseId) {
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
-
         ExpenseDTO expenseDTO = new ExpenseDTO();
         List<PayeeDTO> payeeDTOS = expenseShareRepository.findPayeesWithAmountByExpenseId(expense.getId());
-
         expenseDTO.setPayees(payeeDTOS);
         expenseDTO.setDescription(expense.getDescription());
         expenseDTO.setAmount(expense.getAmount());
         expenseDTO.setPayerName(expense.getOwner().getUsername());
-
         return expenseDTO;
     }
 
     @Override
-    public List<ExpenseDTO> findAllExpense(UUID groupId) throws AccessDeniedException {
-
-        authorizationService.checkAuthorizationOnGroup(groupId);
+    public List<ExpenseDTO> findAllExpense(UUID groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
-
         List<Expense> expenses = expenseRepository.findByGroupId(group.getId());
         List<ExpenseDTO> expenseDTOS = new ArrayList<>();
-
         for (Expense expense : expenses) {
-
             ExpenseDTO expenseDTO = new ExpenseDTO();
             List<PayeeDTO> payeeDTOS = expenseShareRepository.findPayeesWithAmountByExpenseId(expense.getId());
-
             expenseDTO.setPayees(payeeDTOS);
             expenseDTO.setDescription(expense.getDescription());
             expenseDTO.setAmount(expense.getAmount());
@@ -167,7 +136,6 @@ public class ExpenseServiceImpl implements ExpenseService {
             expenseDTO.setPayees(payeeDTOS);
             expenseDTOS.add(expenseDTO);
         }
-
         return expenseDTOS;
     }
 }

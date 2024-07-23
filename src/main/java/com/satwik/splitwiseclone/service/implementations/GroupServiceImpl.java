@@ -41,9 +41,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public String createGroup(GroupDTO groupDTO) {
-
         User user = authorizationService.getAuthorizedUser();
-
         Group group = new Group();
         group.setGroupName(groupDTO.getGroupName());
         group.setUser(user);
@@ -55,12 +53,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupListDTO findAllGroup() {
-
         User user = authorizationService.getAuthorizedUser();
         List<Group> groupList = groupRepository.findByUserId(user.getId());
         GroupListDTO groupListDTO = new GroupListDTO();
         groupListDTO.setOwner(user.getUsername());
-
         List<GroupListDTOWithin> groupListDTOS = new ArrayList<>();
         for (Group group : groupList) {
             groupListDTOS.add(new GroupListDTOWithin(group.getId(), group.getGroupName()));
@@ -72,25 +68,18 @@ public class GroupServiceImpl implements GroupService {
 
     @Transactional
     @Override
-    public String addGroupMembers(UUID groupId, UUID memberId) throws Exception {
-
-        authorizationService.checkAuthorizationOnGroup(groupId);
-
+    public String addGroupMembers(UUID groupId, UUID memberId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
         User member = userRepository.findById(memberId).orElseThrow(() -> new RuntimeException("User not found to add as member!"));
         GroupMembers groupMembers = new GroupMembers();
         groupMembers.setMember(member);
         groupMembers.setGroup(group);
         groupMembersRepository.save(groupMembers);
-
         return "User - " + memberId + " successfully added as member of the group.";
     }
 
     @Override
-    public List<UserDTO> findMembers(UUID groupId) throws Exception {
-
-        authorizationService.checkAuthorizationOnGroup(groupId);
-
+    public List<UserDTO> findMembers(UUID groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
         List<GroupMembers> groupMembersList = groupMembersRepository.findByGroupId(group.getId());
         List<UserDTO> userDTOS = new ArrayList<>();
@@ -101,37 +90,34 @@ public class GroupServiceImpl implements GroupService {
             userDTO.setPhone(new PhoneDTO(groupMembers.getMember().getCountryCode(), groupMembers.getMember().getPhoneNumber()));
             userDTOS.add(userDTO);
         }
-
         return userDTOS;
     }
 
     @Transactional
     @Override
-    public String deleteMembers(UUID groupId, UUID groupMemberId) throws Exception {
-
-        authorizationService.checkAuthorizationOnGroup(groupId);
-
+    public String deleteMembers(UUID groupId, UUID groupMemberId) {
         groupMembersRepository.deleteById(groupMemberId);
-
         return "Member successfully removed from the group!";
     }
 
     @Override
     @Transactional
-    public String deleteGroupByGroupId(UUID groupId) throws Exception {
-        
-        authorizationService.checkAuthorizationOnGroup(groupId);
-        
+    public String deleteGroupByGroupId(UUID groupId) {
         // TODO : add code to check the default group (default group can't be deleted)
-        groupRepository.deleteById(groupId);
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
+
+        if(!group.isDefaultGroup())
+            groupRepository.deleteById(groupId);
+        else
+            throw new RuntimeException("This group is default so can't be delete");
+
         return "Successfully deleted the group - %s.".formatted(groupId);
 
     }
 
     @Override
-    public GroupDTO findGroupByGroupId(UUID groupId) throws Exception {
-
-        Group group = authorizationService.checkAuthorizationOnGroup(groupId);
+    public GroupDTO findGroupByGroupId(UUID groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setGroupId(group.getId());
         groupDTO.setGroupName(group.getGroupName());
@@ -171,14 +157,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId) throws Exception {
-
-        authorizationService.checkAuthorizationOnGroup(groupId);
-        
+    public String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
         group.setGroupName(groupUpdateRequest.getGroupName());
         groupRepository.save(group);
-
         return "%s - Group update successfully!".formatted(group.getId());
     }
 }

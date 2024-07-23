@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,10 +41,9 @@ public class ReportServiceImpl implements ReportService {
     private String REPORT_FILE_PATH;
 
     @Override
-    public List<ReportDTO> generateReport(UUID groupId, UUID userId) throws Exception {
+    public List<ReportDTO> generateReport(UUID groupId) {
 
-        Group group = authorizationService.checkAuthorizationOnGroup(groupId);
-
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
         // preparing report
         List<TempReport> tempReportList = groupRepository.generateReportById(group.getId());
         List<ReportDTO> reportDTOS = new ArrayList<>();
@@ -67,13 +65,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public String exportReport(UUID groupId, UUID userId, String fileType) throws AccessDeniedException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+    public String exportReport(UUID groupId, String fileType) {
+        User user = authorizationService.getAuthorizedUser();
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
 
-        System.out.println("called");
-
-        if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
+        if(user == null || user.getId() != group.getUser().getId()) throw new RuntimeException("Access Denied");
 
         if(fileType.equals("XLSX"))
             exportToXLSX(groupId);

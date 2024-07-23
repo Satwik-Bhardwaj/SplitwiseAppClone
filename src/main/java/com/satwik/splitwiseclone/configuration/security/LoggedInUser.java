@@ -13,6 +13,7 @@ import java.util.UUID;
 @Component
 public class LoggedInUser {
 
-    private UUID userId;
+    private String userEmail;
+    private String userId;
 
 }
