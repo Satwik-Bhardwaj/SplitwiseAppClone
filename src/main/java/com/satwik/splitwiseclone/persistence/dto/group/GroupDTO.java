@@ -1,9 +1,7 @@
 package com.satwik.splitwiseclone.persistence.dto.group;
 
 import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseListDTO;
-import com.satwik.splitwiseclone.persistence.models.GroupMembers;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.satwik.splitwiseclone.persistence.models;
+package com.satwik.splitwiseclone.persistence.entities;
 
 import com.satwik.splitwiseclone.constants.enums.RegistrationMethod;
 import jakarta.persistence.*;

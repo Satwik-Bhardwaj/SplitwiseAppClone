@@ -4,7 +4,7 @@ import com.satwik.splitwiseclone.configuration.jwt.JwtUtil;
 import com.satwik.splitwiseclone.persistence.dto.user.AuthenticationResponse;
 import com.satwik.splitwiseclone.persistence.dto.user.LoginRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.RefreshTokenRequest;
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import com.satwik.splitwiseclone.repository.UserRepository;
 import com.satwik.splitwiseclone.service.interfaces.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;

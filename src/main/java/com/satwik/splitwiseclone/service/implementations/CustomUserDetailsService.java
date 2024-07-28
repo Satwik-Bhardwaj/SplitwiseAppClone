@@ -1,13 +1,12 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import com.satwik.splitwiseclone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
