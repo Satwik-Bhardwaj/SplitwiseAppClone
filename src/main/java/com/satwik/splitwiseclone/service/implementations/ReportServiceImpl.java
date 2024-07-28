@@ -2,8 +2,8 @@ package com.satwik.splitwiseclone.service.implementations;
 
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
 import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
-import com.satwik.splitwiseclone.persistence.models.Group;
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.Group;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import com.satwik.splitwiseclone.repository.ExpenseShareRepository;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;

@@ -1,6 +1,6 @@
 package com.satwik.splitwiseclone.configuration.jwt;
 
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

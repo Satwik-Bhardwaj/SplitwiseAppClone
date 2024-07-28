@@ -1,19 +1,17 @@
 package com.satwik.splitwiseclone.service.implementations;
 
-import com.satwik.splitwiseclone.configuration.security.LoggedInUser;
 import com.satwik.splitwiseclone.constants.enums.RegistrationMethod;
 import com.satwik.splitwiseclone.persistence.dto.user.PhoneDTO;
 import com.satwik.splitwiseclone.persistence.dto.user.RegisterUserRequest;
 import com.satwik.splitwiseclone.persistence.dto.user.UserDTO;
-import com.satwik.splitwiseclone.persistence.models.Group;
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.Group;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;
 import com.satwik.splitwiseclone.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.satwik.splitwiseclone.repository;
 
 import com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO;
-import com.satwik.splitwiseclone.persistence.models.ExpenseShare;
+import com.satwik.splitwiseclone.persistence.entities.ExpenseShare;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

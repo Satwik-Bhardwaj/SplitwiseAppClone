@@ -2,14 +2,13 @@ package com.satwik.splitwiseclone.service.implementations;
 
 import com.satwik.splitwiseclone.persistence.dto.expense.*;
 import com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO;
-import com.satwik.splitwiseclone.persistence.models.*;
+import com.satwik.splitwiseclone.persistence.entities.*;
 import com.satwik.splitwiseclone.repository.*;
 import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

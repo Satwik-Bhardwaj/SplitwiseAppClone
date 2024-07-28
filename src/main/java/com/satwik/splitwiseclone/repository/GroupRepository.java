@@ -1,7 +1,7 @@
 package com.satwik.splitwiseclone.repository;
 
 import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
-import com.satwik.splitwiseclone.persistence.models.Group;
+import com.satwik.splitwiseclone.persistence.entities.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
