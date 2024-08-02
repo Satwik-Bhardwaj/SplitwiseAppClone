@@ -34,6 +34,17 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * Handles the login request for a user.
+     *
+     * This endpoint processes the login request by authenticating the user
+     * with the provided login details. It logs the incoming request and the
+     * resulting authentication response.
+     *
+     * @param loginRequest the request body containing the user's login credentials.
+     * @return a ResponseEntity containing the authentication response, which includes
+     *         the authentication token and user details if the login is successful.
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginRequest loginRequest) {
         log.info("Post Endpoint: login user with request: {}", loginRequest);
@@ -42,6 +53,17 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Handles the refresh token request for a user.
+     *
+     * This endpoint processes the refresh token request by generating a new
+     * authentication token using the provided refresh token details. It logs the
+     * incoming request and the resulting authentication response.
+     *
+     * @param refreshTokenRequest the request body containing the refresh token details.
+     * @return a ResponseEntity containing the authentication response, which includes
+     *         the new authentication token and user details if the refresh token is valid.
+     */
     @PostMapping("/refresh_token")
     public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
         log.info("Post Endpoint: refresh token generation with request: {}", refreshTokenRequest);

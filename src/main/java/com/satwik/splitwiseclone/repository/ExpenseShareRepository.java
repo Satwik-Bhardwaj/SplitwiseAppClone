@@ -1,6 +1,6 @@
 package com.satwik.splitwiseclone.repository;
 
-import com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO;
+import com.satwik.splitwiseclone.persistence.dto.user.PayerDTO;
 import com.satwik.splitwiseclone.persistence.entities.ExpenseShare;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,20 +14,20 @@ import java.util.UUID;
 @Repository
 public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, UUID> {
 
-    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO(u.username, es.sharedAmount) " +
+    @Query("SELECT NEW com.satwik.splitwiseclone.persistence.dto.user.PayerDTO(u.username, es.sharedAmount) " +
             "FROM ExpenseShare es " +
             "INNER JOIN es.user u " +
             "WHERE es.expense.id = ?1")
-    List<PayeeDTO> findPayeesWithAmountByExpenseId(UUID expenseId);
+    List<PayerDTO> findPayersWithAmountByExpenseId(UUID expenseId);
 
     @Query(value = "SELECT COUNT(*) FROM ExpenseShare es WHERE es.expense.id = ?1")
-    int findCountOfPayee(UUID expenseId);
+    int findCountOfPayer(UUID expenseId);
 
     @Query("SELECT u.username " +
             "FROM ExpenseShare es " +
             "INNER JOIN es.user u " +
             "WHERE es.expense.id = ?1")
-    List<String> findPayeesById(UUID expenseId);
+    List<String> findPayersById(UUID expenseId);
 
     @Query(value = "SELECT es FROM ExpenseShare es WHERE es.expense.id = ?1")
     List<ExpenseShare> findExpenseShareById(UUID expenseId);
@@ -36,5 +36,5 @@ public interface ExpenseShareRepository extends JpaRepository<ExpenseShare, UUID
     @Transactional
     @Query("DELETE FROM ExpenseShare es " +
             "WHERE es.expense.id = ?1 AND es.user.id = ?2")
-    void deleteByExpenseIdAndUserId(UUID expenseId, UUID payeeId);
+    void deleteByExpenseIdAndUserId(UUID expenseId, UUID payerId);
 }
