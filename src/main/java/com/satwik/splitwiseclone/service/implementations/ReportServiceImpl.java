@@ -56,7 +56,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }
@@ -94,7 +94,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }
@@ -128,7 +128,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }
