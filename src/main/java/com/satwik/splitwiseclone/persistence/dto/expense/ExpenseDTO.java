@@ -1,10 +1,8 @@
 package com.satwik.splitwiseclone.persistence.dto.expense;
 
-import com.satwik.splitwiseclone.persistence.dto.user.PayeeDTO;
-import jakarta.validation.constraints.NotBlank;
+import com.satwik.splitwiseclone.persistence.dto.user.PayerDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
@@ -23,6 +21,6 @@ public class ExpenseDTO {
 
     private String date;
 
-    private List<PayeeDTO> payees;
+    private List<PayerDTO> payers;
 
 }

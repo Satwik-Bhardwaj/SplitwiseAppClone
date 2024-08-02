@@ -12,9 +12,9 @@ public interface ExpenseService {
 
     String deleteExpenseById(UUID expenseId);
 
-    String addUserToExpense(UUID expenseId, UUID payeeId);
+    String addUserToExpense(UUID expenseId, UUID payerId);
 
-    String removeUserFromExpense(UUID expenseId, UUID payeeId);
+    String removeUserFromExpense(UUID expenseId, UUID payerId);
 
     ExpenseDTO findExpenseById(UUID expenseId);
 

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +19,16 @@ public class ExpenseController {
     @Autowired
     ExpenseService expenseService;
 
-    // create a new expense which is not grouped
+    /**
+     * Creates a new expense which is not grouped.
+     *
+     * This endpoint processes the request to create a non-grouped expense. It logs the
+     * incoming request and the resulting response.
+     *
+     * @param expenseDTO the request body containing the expense details.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the expense creation process.
+     */
     @PostMapping("/create")
     public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
         log.info("Post Endpoint: create expense with request: {}", expenseDTO);
@@ -29,7 +37,17 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // create a new expense which is grouped
+    /**
+     * Creates a new expense which is grouped.
+     *
+     * This endpoint processes the request to create a grouped expense. It logs the
+     * incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group to which the expense belongs.
+     * @param expenseDTO the request body containing the expense details.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the grouped expense creation process.
+     */
     @PostMapping("/create/{groupId}")
     public ResponseEntity<String> createExpense(@PathVariable UUID groupId, @RequestBody ExpenseDTO expenseDTO) {
         log.info("Post Endpoint: create grouped expense with request: {} and groupId: {}", expenseDTO, groupId);
@@ -38,7 +56,16 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // delete an expense
+    /**
+     * Deletes an expense by its ID.
+     *
+     * This endpoint processes the request to delete an expense identified by the given ID.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param expenseId the UUID of the expense to be deleted.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the expense deletion process.
+     */
     @DeleteMapping("/delete/{expenseId}")
     public ResponseEntity<String> deleteExpense(@PathVariable UUID expenseId) {
         log.info("Delete Endpoint: delete an expense with id: {}", expenseId);
@@ -47,21 +74,21 @@ public class ExpenseController {
         return ResponseEntity.ok(response);
     }
 
-    // add payee to the expense
-    @PostMapping("/add-payee/{expenseId}")
-    public ResponseEntity<String> addPayeeToExpense(@RequestParam UUID payeeId, @PathVariable UUID expenseId) {
-        log.info("Post Endpoint: add payee with payeeId: {}, to an expense with expenseId: {}", payeeId, expenseId);
-        String response = expenseService.addUserToExpense(expenseId, payeeId);
-        log.info("Post Endpoint: add payee to expense with response: {}", response);
+    // add payer to the expense
+    @PostMapping("/add-payer/{expenseId}")
+    public ResponseEntity<String> addPayerToExpense(@RequestParam UUID payerId, @PathVariable UUID expenseId) {
+        log.info("Post Endpoint: add payer with payerId: {}, to an expense with expenseId: {}", payerId, expenseId);
+        String response = expenseService.addUserToExpense(expenseId, payerId);
+        log.info("Post Endpoint: add payer to expense with response: {}", response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // remove payee from the expense
-    @DeleteMapping("/remove-payee/{expenseId}")
-    public ResponseEntity<String> removePayeeFromExpense(@RequestParam UUID payeeId, @PathVariable UUID expenseId) {
-        log.info("Delete Endpoint: remove payee with payeeId: {} from an expense with expenseId: {}", payeeId, expenseId);
-        String response = expenseService.removeUserFromExpense(expenseId, payeeId);
-        log.info("Delete Endpoint: remove payee from an expense with response: {}", response);
+    // remove payer from the expense
+    @DeleteMapping("/remove-payer/{expenseId}")
+    public ResponseEntity<String> removePayerFromExpense(@RequestParam UUID payerId, @PathVariable UUID expenseId) {
+        log.info("Delete Endpoint: remove payer with payerId: {} from an expense with expenseId: {}", payerId, expenseId);
+        String response = expenseService.removeUserFromExpense(expenseId, payerId);
+        log.info("Delete Endpoint: remove payer from an expense with response: {}", response);
         return ResponseEntity.ok(response);
     }
 
