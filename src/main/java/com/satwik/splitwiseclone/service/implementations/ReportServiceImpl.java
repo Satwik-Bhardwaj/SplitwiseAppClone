@@ -1,5 +1,7 @@
 package com.satwik.splitwiseclone.service.implementations;
 
+import com.satwik.splitwiseclone.exception.BadRequestException;
+import com.satwik.splitwiseclone.exception.DataNotFoundException;
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
 import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
 import com.satwik.splitwiseclone.persistence.entities.Group;
@@ -14,6 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
@@ -43,7 +46,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public List<ReportDTO> generateReport(UUID groupId) {
 
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
         // preparing report
         List<TempReport> tempReportList = groupRepository.generateReportById(group.getId());
         List<ReportDTO> reportDTOS = new ArrayList<>();
@@ -67,9 +70,9 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public String exportReport(UUID groupId, String fileType) {
         User user = authorizationService.getAuthorizedUser();
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
 
-        if(user == null || user.getId() != group.getUser().getId()) throw new RuntimeException("Access Denied");
+        if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
 
         if(fileType.equals("XLSX"))
             exportToXLSX(groupId);

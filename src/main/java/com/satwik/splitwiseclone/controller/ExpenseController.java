@@ -2,6 +2,7 @@ package com.satwik.splitwiseclone.controller;
 
 import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseDTO;
 import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class ExpenseController {
      *         result of the expense creation process.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
+    public ResponseEntity<String> createExpense(@Valid @RequestBody ExpenseDTO expenseDTO) {
         log.info("Post Endpoint: create expense with request: {}", expenseDTO);
         String response = expenseService.createNonGroupedExpense(expenseDTO);
         log.info("Post Endpoint: create expense with response: {}", response);
@@ -74,7 +75,18 @@ public class ExpenseController {
         return ResponseEntity.ok(response);
     }
 
-    // add payer to the expense
+    /**
+     * Adds a payer to an existing expense.
+     *
+     * This endpoint processes the request to add a payer identified by the given payer ID
+     * to an expense identified by the given expense ID. It logs the incoming request and
+     * the resulting response.
+     *
+     * @param payerId the UUID of the payer to be added to the expense.
+     * @param expenseId the UUID of the expense to which the payer will be added.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the operation.
+     */
     @PostMapping("/add-payer/{expenseId}")
     public ResponseEntity<String> addPayerToExpense(@RequestParam UUID payerId, @PathVariable UUID expenseId) {
         log.info("Post Endpoint: add payer with payerId: {}, to an expense with expenseId: {}", payerId, expenseId);
@@ -83,7 +95,18 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // remove payer from the expense
+    /**
+     * Removes a payer from an existing expense.
+     *
+     * This endpoint processes the request to remove a payer identified by the given payer ID
+     * from an expense identified by the given expense ID. It logs the incoming request and
+     * the resulting response.
+     *
+     * @param payerId the UUID of the payer to be removed from the expense.
+     * @param expenseId the UUID of the expense from which the payer will be removed.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the operation.
+     */
     @DeleteMapping("/remove-payer/{expenseId}")
     public ResponseEntity<String> removePayerFromExpense(@RequestParam UUID payerId, @PathVariable UUID expenseId) {
         log.info("Delete Endpoint: remove payer with payerId: {} from an expense with expenseId: {}", payerId, expenseId);
@@ -92,7 +115,15 @@ public class ExpenseController {
         return ResponseEntity.ok(response);
     }
 
-    // get an expense
+    /**
+     * Retrieves an expense by its ID.
+     *
+     * This endpoint processes the request to find an expense identified by the given expense ID.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param expenseId the UUID of the expense to be retrieved.
+     * @return a ResponseEntity containing the ExpenseDTO of the requested expense.
+     */
     @GetMapping("/{expenseId}")
     public ResponseEntity<ExpenseDTO> findExpense(@PathVariable UUID expenseId) {
         log.info("Get Endpoint: find an expense with expenseId: {}", expenseId);
@@ -101,7 +132,15 @@ public class ExpenseController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // get all expenses within a group
+    /**
+     * Retrieves all expenses within a specific group.
+     *
+     * This endpoint processes the request to find all expenses within a group identified
+     * by the given group ID. It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group whose expenses are to be retrieved.
+     * @return a ResponseEntity containing a list of ExpenseDTOs for all expenses within the group.
+     */
     @GetMapping("/group/{groupId}")
     public ResponseEntity<List<ExpenseDTO>> findAllExpense(@PathVariable UUID groupId) {
         log.info("Get Endpoint: find all expense within a group with groupId: {}", groupId);
