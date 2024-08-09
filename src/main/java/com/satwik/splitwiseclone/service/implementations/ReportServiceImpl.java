@@ -1,9 +1,11 @@
 package com.satwik.splitwiseclone.service.implementations;
 
+import com.satwik.splitwiseclone.exception.BadRequestException;
+import com.satwik.splitwiseclone.exception.DataNotFoundException;
 import com.satwik.splitwiseclone.persistence.dto.report.ReportDTO;
 import com.satwik.splitwiseclone.persistence.dto.report.TempReport;
-import com.satwik.splitwiseclone.persistence.models.Group;
-import com.satwik.splitwiseclone.persistence.models.User;
+import com.satwik.splitwiseclone.persistence.entities.Group;
+import com.satwik.splitwiseclone.persistence.entities.User;
 import com.satwik.splitwiseclone.repository.ExpenseShareRepository;
 import com.satwik.splitwiseclone.repository.GroupRepository;
 import com.satwik.splitwiseclone.repository.UserRepository;
@@ -14,11 +16,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -42,10 +44,9 @@ public class ReportServiceImpl implements ReportService {
     private String REPORT_FILE_PATH;
 
     @Override
-    public List<ReportDTO> generateReport(UUID groupId, UUID userId) throws Exception {
+    public List<ReportDTO> generateReport(UUID groupId) {
 
-        Group group = authorizationService.checkAuthorizationOnGroup(groupId);
-
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
         // preparing report
         List<TempReport> tempReportList = groupRepository.generateReportById(group.getId());
         List<ReportDTO> reportDTOS = new ArrayList<>();
@@ -58,7 +59,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }
@@ -67,11 +68,9 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public String exportReport(UUID groupId, UUID userId, String fileType) throws AccessDeniedException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
-
-        System.out.println("called");
+    public String exportReport(UUID groupId, String fileType) {
+        User user = authorizationService.getAuthorizedUser();
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
 
         if(user == null || user.getId() != group.getUser().getId()) throw new AccessDeniedException("Access Denied");
 
@@ -98,7 +97,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }
@@ -132,7 +131,7 @@ public class ReportServiceImpl implements ReportService {
             reportDTO.setTotalExpenseAmount(tempReport.getTotalExpenseAmount());
 
 //          getting contributors
-            List<String> contributors = expenseShareRepository.findPayeesById(tempReport.getExpenseId());
+            List<String> contributors = expenseShareRepository.findPayersById(tempReport.getExpenseId());
             reportDTO.setExpenseContributors(contributors);
             reportDTOS.add(reportDTO);
         }

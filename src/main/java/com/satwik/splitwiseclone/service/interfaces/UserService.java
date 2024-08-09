@@ -7,10 +7,10 @@ import java.util.UUID;
 public interface UserService {
     String saveUser(RegisterUserRequest registerUserRequest);
 
-    UserDTO findUserById(UUID userId) throws Exception;
+    UserDTO findUser();
 
-    String deleteUser(UUID userId) throws Exception;
+    String deleteUser();
 
-    String updateUser(UUID userId, RegisterUserRequest registerUserRequest) throws Exception;
+    String updateUser(RegisterUserRequest registerUserRequest);
 
 }

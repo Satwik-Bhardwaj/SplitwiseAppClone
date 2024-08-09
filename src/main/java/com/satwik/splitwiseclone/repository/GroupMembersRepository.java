@@ -1,6 +1,6 @@
 package com.satwik.splitwiseclone.repository;
 
-import com.satwik.splitwiseclone.persistence.models.GroupMembers;
+import com.satwik.splitwiseclone.persistence.entities.GroupMembers;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

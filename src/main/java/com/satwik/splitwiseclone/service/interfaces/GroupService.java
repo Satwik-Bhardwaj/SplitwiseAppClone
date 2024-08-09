@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GroupService {
-    String createGroup(GroupDTO groupDTO) throws Exception;
+    String createGroup(GroupDTO groupDTO);
 
-    String deleteGroupByGroupId(UUID groupId) throws Exception;
+    String deleteGroupByGroupId(UUID groupId);
 
-    GroupDTO findGroupByGroupId(UUID groupId) throws Exception;
+    GroupDTO findGroupByGroupId(UUID groupId);
 
-    String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId) throws Exception;
+    String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId);
 
-    GroupListDTO findAllGroup() throws Exception;
+    GroupListDTO findAllGroup();
 
-    String addGroupMembers(UUID groupId, UUID memberId) throws Exception;
+    String addGroupMembers(UUID groupId, UUID memberId);
 
-    List<UserDTO> findMembers(UUID groupId) throws Exception;
+    List<UserDTO> findMembers(UUID groupId);
 
-    String deleteMembers(UUID groupId, UUID groupMemberId) throws Exception;
+    String deleteMembers(UUID groupId, UUID groupMemberId);
 }

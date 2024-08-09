@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.persistence.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequest {
 
-    @NotNull
-    String userId;
+    @NotBlank(message = "User email should not be blank or null")
+    String userEmail;
 
-    @NotNull
+    @NotBlank(message = "Password should not be null or empty.")
     @Size(min = 8)
     String password;
 
