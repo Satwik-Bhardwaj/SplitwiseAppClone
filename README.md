@@ -7,7 +7,6 @@ This Spring Boot project serves as a backend API for a clone of Splitwise, a pop
 - **User Management**: Allows users to register, login, and manage their profiles.
 - **Group Management**: Enables users to create, join, and manage groups for shared expenses.
 - **Expense Tracking**: Facilitates the creation, editing, and deletion of expenses within groups.
-- **Settlements**: Automatically calculates and records settlements between users to balance expenses.
 
 ## Technologies Used
 
@@ -20,24 +19,43 @@ This Spring Boot project serves as a backend API for a clone of Splitwise, a pop
 ## Setup
 
 1. **Clone the Repository**:
-   ```
+   ```bash
    git clone https://github.com/Satwik-Bhardwaj/SplitwiseAppClone.git
    ```
 
 2. **Database Configuration**:
     - Install MySQL and create a database named `Splitwise`.
-    - Update `application.properties` with your MySQL username and password.
+    - Update `application.properties` with your MySQL username and password:
+      ```properties
+      spring.datasource.url=jdbc:mysql://localhost:3306/Splitwise
+      spring.datasource.username=root
+      spring.datasource.password=root
+      ```
 
-3. **Run the Application**:
+3. **OAuth Configuration**:
+    - Obtain credentials from GCP to enable OAuth functionality.
+    - Update `application.properties` with the following parameters:
+      ```properties
+      spring.security.oauth2.client.registration.google.client-id=abc123
+      spring.security.oauth2.client.registration.google.client-secret=good123
+      ```
+    - If you do not require OAuth2 functionality, you can remove the related parameters and the corresponding controllers and services.
+
+4. **Run the Application**:
     - Navigate to the project directory.
     - Execute the following command:
-      ```
+      ```bash
       ./mvnw spring-boot:run
       ```
 
-[//]: # (4. **API Documentation**:)
+[//]: # (5. **API Documentation**:)
 
 [//]: # (    - Access the API documentation at `http://localhost:8080/swagger-ui.html`.)
+
+## Postman Collection
+To get started with the API, you can import the Postman collection available on Google Drive:
+
+- [Download Postman Collection](https://drive.google.com/drive/folders/16UrPH-6y-bDP8b_OESNg9r12mApprNZX?usp=sharing)
 
 ## Usage
 
@@ -47,13 +65,10 @@ This Spring Boot project serves as a backend API for a clone of Splitwise, a pop
 
 ## Contributing
 
-Contributions are welcome! If you'd like to contribute to this project, feel free to submit a pull request or open an issue.
-
-[//]: # (## License)
-
-[//]: # ()
-[//]: # (This project is licensed under the [MIT License]&#40;LICENSE&#41;.)
+This project is open-source and welcomes contributions from anyone. Feel free to submit a pull request or open an issue if you'd like to contribute.
 
 ## Contact
 
 For any inquiries or support, please contact satwikbhardwaj123@gmail.com.
+
+Let me know if you need any more changes!
