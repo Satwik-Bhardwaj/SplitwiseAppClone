@@ -62,14 +62,13 @@ public class UserController {
      * This endpoint processes the request to update the details of a user identified by the given user ID
      * with the provided registration details. It logs the incoming request and the resulting response.
      *
-     * @param userId the UUID of the user to be updated.
      * @param updateUserRequest the request object containing updated user details.
      * @return a ResponseEntity containing a string response message indicating the result of the update process.
      */
     @PutMapping("update/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable UUID userId, @Valid @RequestBody RegisterUserRequest updateUserRequest) {
-        log.info("Put Endpoint: update user with id: {}, and register user request: {}", userId, updateUserRequest);
-        String response = userService.updateUser(userId, updateUserRequest);
+    public ResponseEntity<String> updateUser(@Valid @RequestBody RegisterUserRequest updateUserRequest) {
+        log.info("Put Endpoint: update user with id: {}, and register user request: {}", loggedInUser.getUserId(), updateUserRequest);
+        String response = userService.updateUser(updateUserRequest);
         log.info("Put Endpoint: update user with response: {}", response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

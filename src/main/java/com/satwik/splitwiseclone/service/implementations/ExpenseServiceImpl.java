@@ -79,7 +79,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public String addUserToExpense(UUID expenseId, UUID payerId) {
 
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
-        User payee = userRepository.findById(payeeId).orElseThrow(() -> new RuntimeException("Payee not found"));
+        User payer = userRepository.findById(payerId).orElseThrow(() -> new RuntimeException("Payee not found"));
         ExpenseShare expenseShare = new ExpenseShare();
         expenseShare.setExpense(expense);
         expenseShare.setUser(payer);
