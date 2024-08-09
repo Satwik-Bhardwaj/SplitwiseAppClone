@@ -52,6 +52,11 @@ This Spring Boot project serves as a backend API for a clone of Splitwise, a pop
 
 [//]: # (    - Access the API documentation at `http://localhost:8080/swagger-ui.html`.)
 
+## Postman Collection
+To get started with the API, you can import the Postman collection available on Google Drive:
+
+- [Download Postman Collection](https://drive.google.com/drive/folders/16UrPH-6y-bDP8b_OESNg9r12mApprNZX?usp=sharing)
+
 ## Usage
 
 - **Authentication**: Use the `/api/v1/auth/login` endpoint to obtain a JWT token by providing valid credentials.
