@@ -72,9 +72,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String updateUser(UUID userId, RegisterUserRequest request) {
+    public String updateUser(RegisterUserRequest request) {
         User user = authorizationService.getAuthorizedUser();
-        if(user.getId() != userId) throw new AccessDeniedException("You are not authenticated for deleting this account");
+        if(!user.getEmail().equals(request.getEmail())) throw new AccessDeniedException("You are not authenticated for updating this account");
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setCountryCode(request.getPhone().getCountryCode());

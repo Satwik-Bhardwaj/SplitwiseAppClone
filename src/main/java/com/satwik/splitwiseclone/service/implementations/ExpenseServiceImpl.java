@@ -1,5 +1,7 @@
 package com.satwik.splitwiseclone.service.implementations;
 
+import com.satwik.splitwiseclone.exception.BadRequestException;
+import com.satwik.splitwiseclone.exception.DataNotFoundException;
 import com.satwik.splitwiseclone.persistence.dto.expense.*;
 import com.satwik.splitwiseclone.persistence.dto.user.PayerDTO;
 import com.satwik.splitwiseclone.persistence.entities.*;
@@ -37,7 +39,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public String createGroupedExpense(UUID groupId, ExpenseDTO expenseDTO) {
 
         User user = authorizationService.getAuthorizedUser();
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
         expense.setDescription(expenseDTO.getDescription());
@@ -52,7 +54,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public String createNonGroupedExpense(ExpenseDTO expenseDTO) {
 
         User user = authorizationService.getAuthorizedUser();
-        Group group = groupRepository.findDefaultGroup(user.getId()).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findDefaultGroup(user.getId()).orElseThrow(() -> new DataNotFoundException("Group not found"));
 
         Expense expense = new Expense();
         expense.setAmount(expenseDTO.getAmount());
@@ -77,7 +79,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public String addUserToExpense(UUID expenseId, UUID payerId) {
 
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
-        User payer = userRepository.findById(payerId).orElseThrow(() -> new RuntimeException("Payer not found"));
+        User payee = userRepository.findById(payeeId).orElseThrow(() -> new RuntimeException("Payee not found"));
         ExpenseShare expenseShare = new ExpenseShare();
         expenseShare.setExpense(expense);
         expenseShare.setUser(payer);
@@ -96,8 +98,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     @Transactional
     public String removeUserFromExpense(UUID expenseId, UUID payerId) {
-        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
-        User payer = userRepository.findById(payerId).orElseThrow(() -> new RuntimeException("Payer not found"));
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new DataNotFoundException("Expense not found"));
+        User payer = userRepository.findById(payerId).orElseThrow(() -> new DataNotFoundException("Payer not found"));
         expenseShareRepository.deleteByExpenseIdAndUserId(expense.getId(), payer.getId());
         double sharedAmount = expense.getAmount() / (expenseShareRepository.findCountOfPayer(expense.getId()));
         List<ExpenseShare> shareList = expenseShareRepository.findExpenseShareById(expense.getId());
@@ -110,7 +112,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseDTO findExpenseById(UUID expenseId) {
-        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new RuntimeException("Expense not found"));
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new DataNotFoundException("Expense not found"));
         ExpenseDTO expenseDTO = new ExpenseDTO();
         List<PayerDTO> payerDTOS = expenseShareRepository.findPayersWithAmountByExpenseId(expense.getId());
         expenseDTO.setPayers(payerDTOS);
@@ -122,7 +124,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<ExpenseDTO> findAllExpense(UUID groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
         List<Expense> expenses = expenseRepository.findByGroupId(group.getId());
         List<ExpenseDTO> expenseDTOS = new ArrayList<>();
         for (Expense expense : expenses) {

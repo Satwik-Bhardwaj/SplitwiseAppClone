@@ -2,6 +2,7 @@ package com.satwik.splitwiseclone.controller;
 
 import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseDTO;
 import com.satwik.splitwiseclone.service.interfaces.ExpenseService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -95,7 +96,7 @@ public class ExpenseController {
     }
 
     /**
-     * Removes a payer or member from an existing expense.
+     * Removes a payer from an existing expense.
      *
      * This endpoint processes the request to remove a payer identified by the given payer ID
      * from an expense identified by the given expense ID. It logs the incoming request and

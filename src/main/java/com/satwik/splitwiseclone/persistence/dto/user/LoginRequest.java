@@ -12,11 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequest {
 
-    @NotNull
-    @NotBlank
+    @NotBlank(message = "User email should not be blank or null")
     String userEmail;
 
-    @NotNull
+    @NotBlank(message = "Password should not be null or empty.")
     @Size(min = 8)
     String password;
 

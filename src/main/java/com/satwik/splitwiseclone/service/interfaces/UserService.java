@@ -11,6 +11,6 @@ public interface UserService {
 
     String deleteUser();
 
-    String updateUser(UUID userId, RegisterUserRequest registerUserRequest);
+    String updateUser(RegisterUserRequest registerUserRequest);
 
 }
