@@ -16,6 +16,16 @@ public class OAuthController {
     @Autowired
     OAuthService oAuthService;
 
+    /**
+     * Handles the OAuth2 callback.
+     *
+     * This endpoint processes the OAuth2 callback by handling the authorization code and state parameters.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param code the authorization code received from the OAuth2 provider.
+     * @param state the state parameter received from the OAuth2 provider, used to prevent CSRF attacks.
+     * @return a ResponseEntity containing the AuthenticationResponse after handling the OAuth2 callback.
+     */
     @GetMapping("/callback")
     public ResponseEntity<AuthenticationResponse> handleCallback(@RequestParam("code") String code, @RequestParam("state") String state) {
         // TODO : Match state

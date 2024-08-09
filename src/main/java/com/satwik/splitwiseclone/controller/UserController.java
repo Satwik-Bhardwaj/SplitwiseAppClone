@@ -23,7 +23,15 @@ public class UserController {
     @Autowired
     private LoggedInUser loggedInUser;
 
-    // register user
+    /**
+     * Registers a new user.
+     *
+     * This endpoint processes the request to register a new user with the provided registration details.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param registerUserRequest the request object containing user registration details.
+     * @return a ResponseEntity containing a string response message indicating the result of the registration process.
+     */
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
         log.info("Post Endpoint: register user with request: {}", registerUserRequest);
@@ -32,7 +40,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // get the user
+    /**
+     * Retrieves the current user details.
+     *
+     * This endpoint processes the request to retrieve the details of the currently logged-in user.
+     * It logs the incoming request and the resulting response.
+     *
+     * @return a ResponseEntity containing the UserDTO of the currently logged-in user.
+     */
     @GetMapping("")
     public ResponseEntity<UserDTO> getUser() {
         log.info("Get Endpoint: get user");
@@ -41,7 +56,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // update the user details
+    /**
+     * Updates the details of a user.
+     *
+     * This endpoint processes the request to update the details of a user identified by the given user ID
+     * with the provided registration details. It logs the incoming request and the resulting response.
+     *
+     * @param userId the UUID of the user to be updated.
+     * @param updateUserRequest the request object containing updated user details.
+     * @return a ResponseEntity containing a string response message indicating the result of the update process.
+     */
     @PutMapping("update/{userId}")
     public ResponseEntity<String> updateUser(@PathVariable UUID userId, @Valid @RequestBody RegisterUserRequest updateUserRequest) {
         log.info("Put Endpoint: update user with id: {}, and register user request: {}", userId, updateUserRequest);
@@ -50,7 +74,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // delete the user
+    /**
+     * Deletes the current user.
+     *
+     * This endpoint processes the request to delete the currently logged-in user. It logs the incoming request
+     * and the resulting response.
+     *
+     * @return a ResponseEntity containing a string response message indicating the result of the deletion process.
+     */
     @DeleteMapping("delete")
     public ResponseEntity<String> deleteUser() {
         log.info("Delete Endpoint: delete user");
