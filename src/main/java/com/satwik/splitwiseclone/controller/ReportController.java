@@ -23,6 +23,15 @@ public class ReportController {
     @Autowired
     LoggedInUser loggedInUser;
 
+    /**
+     * Generates a report for a specific group.
+     *
+     * This endpoint processes the request to generate a report for a group identified by the given group ID.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group for which the report is to be generated.
+     * @return a ResponseEntity containing a list of ReportDTOs for the specified group.
+     */
     @GetMapping("/{groupId}")
     public ResponseEntity<List<ReportDTO>> generateReport(@PathVariable UUID groupId) {
         log.info("Get Endpoint: generate a report for a group with groupId: {}", groupId);
@@ -31,6 +40,17 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * Exports a report for a specific group in a specified file format.
+     *
+     * This endpoint processes the request to export a report for a group identified by the given group ID
+     * in the specified file format. It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group for which the report is to be exported.
+     * @param fileType the type of file in which the report is to be exported (e.g., PDF, CSV).
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the report export process.
+     */
     @GetMapping("/{groupId}/export")
     public ResponseEntity<String> exportReport(@PathVariable UUID groupId, @RequestParam String fileType) {
         log.info("Get Endpoint: export the report triggered");

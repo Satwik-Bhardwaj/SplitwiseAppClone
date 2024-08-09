@@ -27,7 +27,16 @@ public class GroupController {
     @Autowired
     LoggedInUser loggedInUser;
 
-    // create a group for a user
+    /**
+     * Creates a group for a user.
+     *
+     * This endpoint processes the request to create a new group with the given group data.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param groupDTO the data transfer object containing the details of the group to be created.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the group creation process.
+     */
     @PostMapping("/create")
     public ResponseEntity<String> createGroup(@Valid @RequestBody GroupDTO groupDTO) {
         log.info("Post Endpoint: create group request: {}", groupDTO);
@@ -36,7 +45,16 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // delete a group in a user account
+    /**
+     * Deletes a group in a user account.
+     *
+     * This endpoint processes the request to delete a group identified by the given group ID.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group to be deleted.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the group deletion process.
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteGroup(@RequestParam UUID groupId) {
         log.info("Delete Endpoint: delete group with id: {}", groupId);
@@ -45,7 +63,15 @@ public class GroupController {
         return ResponseEntity.ok(response);
     }
 
-    // get a group in a user account
+    /**
+     * Retrieves a group in a user account.
+     *
+     * This endpoint processes the request to find a group identified by the given group ID.
+     * It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group to be retrieved.
+     * @return a ResponseEntity containing the GroupDTO of the requested group.
+     */
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupDTO> findGroup(@PathVariable UUID groupId) {
         log.info("Get Endpoint: find group with id: {}", groupId);
@@ -54,7 +80,17 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(groupDTO);
     }
 
-    // update a group in a user account
+    /**
+     * Updates a group in a user account.
+     *
+     * This endpoint processes the request to update a group identified by the given group ID
+     * with the provided update data. It logs the incoming request and the resulting response.
+     *
+     * @param groupUpdateRequest the data transfer object containing the details of the group update.
+     * @param groupId the UUID of the group to be updated.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the group update process.
+     */
     @PutMapping("/update/{groupId}")
     public ResponseEntity<String> updateGroup(@RequestBody GroupUpdateRequest groupUpdateRequest, @PathVariable UUID groupId) {
         log.info("Put Endpoint: update group with request: {} and request: {}", groupUpdateRequest, groupId);
@@ -63,7 +99,14 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // get all the groups of the user
+    /**
+     * Retrieves all groups of the user.
+     *
+     * This endpoint processes the request to find all groups associated with the user.
+     * It logs the incoming request and the resulting response.
+     *
+     * @return a ResponseEntity containing a GroupListDTO with all the groups of the user.
+     */
     @GetMapping("")
     public ResponseEntity<GroupListDTO> findAllGroup() {
         log.info("Get Endpoint: find all group of the user");
@@ -72,7 +115,18 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // add members to the group
+    /**
+     * Adds members to a group.
+     *
+     * This endpoint processes the request to add a member identified by the given member ID
+     * to a group identified by the given group ID. It logs the incoming request and
+     * the resulting response.
+     *
+     * @param groupId the UUID of the group to which the member will be added.
+     * @param memberId the UUID of the member to be added to the group.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the member addition process.
+     */
     @PostMapping("/add-member/{groupId}")
     public ResponseEntity<String> addGroupMembers(@PathVariable UUID groupId, @RequestParam UUID memberId) {
         log.info("Post Endpoint: add member with memberId: {} to the group with groupId: {}", memberId, groupId);
@@ -81,7 +135,15 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // get all the members of the group
+    /**
+     * Retrieves all members of a group.
+     *
+     * This endpoint processes the request to find all members of a group identified
+     * by the given group ID. It logs the incoming request and the resulting response.
+     *
+     * @param groupId the UUID of the group whose members are to be retrieved.
+     * @return a ResponseEntity containing a list of UserDTOs for all members of the group.
+     */
     @GetMapping("/{groupId}/members")
     public ResponseEntity<List<UserDTO>> findMembers(@PathVariable UUID groupId) {
         log.info("Get Endpoint: find members of group with groupId: {}", groupId);
@@ -90,7 +152,18 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // remove all the members of the group
+    /**
+     * Removes a member from a group.
+     *
+     * This endpoint processes the request to remove a member identified by the given group member ID
+     * from a group identified by the given group ID. It logs the incoming request and
+     * the resulting response.
+     *
+     * @param groupMemberId the UUID of the member to be removed from the group.
+     * @param groupId the UUID of the group from which the member will be removed.
+     * @return a ResponseEntity containing a string response message indicating the
+     *         result of the member removal process.
+     */
     @DeleteMapping("/remove-member/{groupMemberId}")
     public ResponseEntity<String> deleteMembers(@PathVariable UUID groupMemberId, @RequestParam UUID groupId) {
         log.info("Delete Endpoint: delete a member with memberId: {} and groupId: {}", groupMemberId, groupId);

@@ -14,7 +14,7 @@
 	<name>SplitwiseAppClone</name>
 	<description>Spring App - splitwise app clone</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<!--	webflux dependency-->
 	<dependencies>
