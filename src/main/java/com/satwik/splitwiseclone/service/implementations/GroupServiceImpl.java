@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.service.implementations;
 
+import com.satwik.splitwiseclone.exception.DataNotFoundException;
 import com.satwik.splitwiseclone.persistence.dto.expense.ExpenseListDTO;
 import com.satwik.splitwiseclone.persistence.dto.group.*;
 import com.satwik.splitwiseclone.persistence.dto.user.PhoneDTO;
@@ -69,8 +70,8 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public String addGroupMembers(UUID groupId, UUID memberId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
-        User member = userRepository.findById(memberId).orElseThrow(() -> new RuntimeException("User not found to add as member!"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
+        User member = userRepository.findById(memberId).orElseThrow(() -> new DataNotFoundException("User not found to add as member!"));
         GroupMembers groupMembers = new GroupMembers();
         groupMembers.setMember(member);
         groupMembers.setGroup(group);
@@ -80,7 +81,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<UserDTO> findMembers(UUID groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
         List<GroupMembers> groupMembersList = groupMembersRepository.findByGroupId(group.getId());
         List<UserDTO> userDTOS = new ArrayList<>();
         for (GroupMembers groupMembers : groupMembersList) {
@@ -104,7 +105,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     public String deleteGroupByGroupId(UUID groupId) {
         // TODO : add code to check the default group (default group can't be deleted)
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
 
         if(!group.isDefaultGroup())
             groupRepository.deleteById(groupId);
@@ -117,7 +118,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDTO findGroupByGroupId(UUID groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found!"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setGroupId(group.getId());
         groupDTO.setGroupName(group.getGroupName());
@@ -158,7 +159,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public String updateGroup(GroupUpdateRequest groupUpdateRequest, UUID groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new RuntimeException("Group not found"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
         group.setGroupName(groupUpdateRequest.getGroupName());
         groupRepository.save(group);
         return "%s - Group update successfully!".formatted(group.getId());

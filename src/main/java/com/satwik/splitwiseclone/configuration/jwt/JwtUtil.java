@@ -1,5 +1,6 @@
 package com.satwik.splitwiseclone.configuration.jwt;
 
+import com.satwik.splitwiseclone.exception.BadRequestException;
 import com.satwik.splitwiseclone.persistence.entities.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -74,10 +75,10 @@ public class JwtUtil {
             return getClaims(refreshToken, REFRESH_SECRET_KEY);
         }catch (ExpiredJwtException expiredJwtException) {
             log.error("refresh token expired! User have to log in again");
-            throw new RuntimeException("Refresh token is expired! Please log in again...");
+            throw new BadRequestException("Refresh token is expired! Please log in again...");
         }catch (SignatureException signatureException) {
             log.error("invalid signature of refresh token");
-            throw new RuntimeException("refresh token has invalid signature!");
+            throw new BadRequestException("Refresh token has invalid signature!");
         }
     }
 
