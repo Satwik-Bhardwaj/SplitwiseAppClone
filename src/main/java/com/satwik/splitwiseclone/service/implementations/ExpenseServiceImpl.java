@@ -36,7 +36,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public String createGroupedExpense(UUID groupId, ExpenseDTO expenseDTO) {
+    public ExpenseDTO createGroupedExpense(UUID groupId, ExpenseDTO expenseDTO) {
 
         User user = authorizationService.getAuthorizedUser();
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found"));
@@ -46,12 +46,18 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setGroup(group);
         expense.setOwner(user);
         expenseRepository.save(expense);
-        return "Expense successfully created!";
+
+        ExpenseDTO response = new ExpenseDTO();
+        response.setExpenseId(expense.getId());
+        response.setAmount(expense.getAmount());
+        response.setDescription(expense.getDescription());
+        response.setPayerName(expense.getOwner().getUsername());
+        return response;
     }
 
     @Override
     @Transactional
-    public String createNonGroupedExpense(ExpenseDTO expenseDTO) {
+    public ExpenseDTO createNonGroupedExpense(ExpenseDTO expenseDTO) {
 
         User user = authorizationService.getAuthorizedUser();
         Group group = groupRepository.findDefaultGroup(user.getId()).orElseThrow(() -> new DataNotFoundException("Group not found"));
@@ -63,8 +69,14 @@ public class ExpenseServiceImpl implements ExpenseService {
         expense.setOwner(user);
         expense = expenseRepository.save(expense);
 
+        ExpenseDTO response = new ExpenseDTO();
+        response.setExpenseId(expense.getId());
+        response.setAmount(expense.getAmount());
+        response.setDescription(expense.getDescription());
+        response.setPayerName(expense.getOwner().getUsername());
+
         // TODO: add owner itself for
-        return expense.getId() + " - Expense successfully created in the default group!";
+        return response;
     }
 
     @Override
@@ -115,6 +127,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new DataNotFoundException("Expense not found"));
         ExpenseDTO expenseDTO = new ExpenseDTO();
         List<PayerDTO> payerDTOS = expenseShareRepository.findPayersWithAmountByExpenseId(expense.getId());
+        expenseDTO.setExpenseId(expense.getId());
         expenseDTO.setPayers(payerDTOS);
         expenseDTO.setDescription(expense.getDescription());
         expenseDTO.setAmount(expense.getAmount());
