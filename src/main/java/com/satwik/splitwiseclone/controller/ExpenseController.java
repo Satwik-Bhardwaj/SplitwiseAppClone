@@ -31,9 +31,9 @@ public class ExpenseController {
      *         result of the expense creation process.
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createExpense(@RequestBody ExpenseDTO expenseDTO) {
+    public ResponseEntity<ExpenseDTO> createExpense(@RequestBody ExpenseDTO expenseDTO) {
         log.info("Post Endpoint: create expense with request: {}", expenseDTO);
-        String response = expenseService.createNonGroupedExpense(expenseDTO);
+        ExpenseDTO response = expenseService.createNonGroupedExpense(expenseDTO);
         log.info("Post Endpoint: create expense with response: {}", response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -50,9 +50,9 @@ public class ExpenseController {
      *         result of the grouped expense creation process.
      */
     @PostMapping("/create/{groupId}")
-    public ResponseEntity<String> createExpense(@PathVariable UUID groupId, @RequestBody ExpenseDTO expenseDTO) {
+    public ResponseEntity<ExpenseDTO> createExpense(@PathVariable UUID groupId, @RequestBody ExpenseDTO expenseDTO) {
         log.info("Post Endpoint: create grouped expense with request: {} and groupId: {}", expenseDTO, groupId);
-        String response = expenseService.createGroupedExpense(groupId, expenseDTO);
+        ExpenseDTO response = expenseService.createGroupedExpense(groupId, expenseDTO);
         log.info("Post Endpoint: create grouped expense with response: {}", response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
