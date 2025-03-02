@@ -128,6 +128,7 @@ public class GroupServiceImpl implements GroupService {
         List<ExpenseListDTO> expenseDTOList = new ArrayList<>();
         for (Expense expense : expenseList) {
             ExpenseListDTO expenseListDTO = new ExpenseListDTO();
+            expenseListDTO.setExpenseId(expense.getId());
             expenseListDTO.setAmount(expense.getAmount());
             expenseListDTO.setDescription(expense.getDescription());
             expenseListDTO.setExpenseCreatedAt(String.valueOf(expense.getCreatedOn()));

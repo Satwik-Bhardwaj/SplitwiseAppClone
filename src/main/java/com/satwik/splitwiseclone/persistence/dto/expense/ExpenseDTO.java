@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpenseDTO {
+    private UUID expenseId;
 
     private String payerName;
 
