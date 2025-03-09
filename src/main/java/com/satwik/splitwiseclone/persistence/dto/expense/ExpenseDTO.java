@@ -1,6 +1,6 @@
 package com.satwik.splitwiseclone.persistence.dto.expense;
 
-import com.satwik.splitwiseclone.persistence.dto.user.PayerDTO;
+import com.satwik.splitwiseclone.persistence.dto.user.OwerDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,6 +23,6 @@ public class ExpenseDTO {
 
     private String date;
 
-    private List<PayerDTO> payers;
+    private List<OwerDTO> owers;
 
 }

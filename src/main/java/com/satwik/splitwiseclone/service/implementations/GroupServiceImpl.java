@@ -104,7 +104,6 @@ public class GroupServiceImpl implements GroupService {
     @Override
     @Transactional
     public String deleteGroupByGroupId(UUID groupId) {
-        // TODO : add code to check the default group (default group can't be deleted)
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
 
         if(!group.isDefaultGroup())
@@ -113,7 +112,6 @@ public class GroupServiceImpl implements GroupService {
             throw new RuntimeException("This group is default so can't be delete");
 
         return "Successfully deleted the group - %s.".formatted(groupId);
-
     }
 
     @Override
