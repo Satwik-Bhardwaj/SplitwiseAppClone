@@ -4,6 +4,7 @@ import com.satwik.splitwiseclone.persistence.dto.user.OwerDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class ExpenseDTO {
     @NotNull
     private String description;
 
-    private String date;
+    private LocalDateTime date;
 
     private List<OwerDTO> owers;
 
