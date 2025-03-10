@@ -131,6 +131,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         expenseDTO.setDescription(expense.getDescription());
         expenseDTO.setAmount(expense.getAmount());
         expenseDTO.setPayerName(expense.getPayer().getUsername());
+        expenseDTO.setDate(expense.getCreatedOn());
         return expenseDTO;
     }
 
@@ -142,8 +143,10 @@ public class ExpenseServiceImpl implements ExpenseService {
         for (Expense expense : expenses) {
             ExpenseDTO expenseDTO = new ExpenseDTO();
             List<OwerDTO> owerDTOS = expenseShareRepository.findOwersWithAmountByExpenseId(expense.getId());
+            expenseDTO.setExpenseId(expense.getId());
             expenseDTO.setOwers(owerDTOS);
             expenseDTO.setDescription(expense.getDescription());
+            expenseDTO.setDate(expense.getCreatedOn());
             expenseDTO.setAmount(expense.getAmount());
             expenseDTO.setPayerName(expense.getPayer().getUsername());
             expenseDTOS.add(expenseDTO);
