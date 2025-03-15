@@ -16,6 +16,8 @@ public class ExpenseDTO {
 
     private String payerName;
 
+    private UUID payerId;
+
     @NotNull
     private double amount;
 
