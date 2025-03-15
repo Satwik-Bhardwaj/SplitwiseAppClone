@@ -72,6 +72,7 @@ public class GroupServiceImpl implements GroupService {
     public String addGroupMembers(UUID groupId, UUID memberId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new DataNotFoundException("Group not found!"));
         User member = userRepository.findById(memberId).orElseThrow(() -> new DataNotFoundException("User not found to add as member!"));
+        // TODO : add check to avoid add members to default group
         GroupMembers groupMembers = new GroupMembers();
         groupMembers.setMember(member);
         groupMembers.setGroup(group);
